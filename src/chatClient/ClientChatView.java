@@ -8,7 +8,7 @@ import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 
 public class ClientChatView extends JFrame {
-    JPanel contentBox = new JPanel();
+    ContentBoxPanel contentBox = new ContentBoxPanel();
     JTextField messageBox = new JTextField();
     JButton sendButton = new JButton("Send");
     JPanel chatViewPanel = new JPanel();
@@ -17,9 +17,11 @@ public class ClientChatView extends JFrame {
     public ClientChatView() {
         JScrollPane contentBoxScrollPane = new JScrollPane(contentBox);
         contentBox.setBackground(Color.WHITE);
-        contentBox.add(new SentChatBox("Hello"));
-        contentBox.add(new ReceivedChatBox("Hello Back"));
-
+        contentBox.addSend("Hello");
+        contentBox.addReceived("Hello Back");
+        contentBox.addSend("How are you doing?");
+        contentBox.addReceived("I'm Fine. How are you?");
+        contentBox.addReceived("Where are you rn?");
         //Experimental for adding html/css
 
 /*
