@@ -1,5 +1,10 @@
 package chatClient;
 
+import chatServer.ServerWorker;
+import userHandleDesktop.UserHandleController;
+
+import javax.swing.*;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -13,12 +18,32 @@ public class ChatClient {
     private InputStream serverIn;
     private OutputStream serverOut;
 
-    public ChatClient(String serverName, int serverPort) {
+    public ChatClient(String serverName, int serverPort, UserHandleController userHandleController) {
         this.serverName = serverName;
         this.serverPort = serverPort;
+        if (connect()) {
+            Thread serverListener = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        listenServer(userHandleController);
+                    } catch (IOException e) {
+                        System.err.println("ChatClient : Server Disconnected!");
+                        e.printStackTrace();
+                    }
+                }
+            };
+            serverListener.start();
+        } else {
+            System.err.println("ChatClient : Connection Failed!");
+        }
     }
 
-    public void listenServer() throws IOException {
+    public void login(String userHandle) throws IOException {
+        send("login " + userHandle);
+    }
+
+    private void listenServer(UserHandleController userHandleController) throws IOException {
         String line;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(serverIn));
         while ((line = bufferedReader.readLine()) != null) {
@@ -29,7 +54,39 @@ public class ChatClient {
                 handleOfflineCommand(tokens);
             } else if (tokens[0].equalsIgnoreCase("msg")) {
                 handleMessageCommand(line);
+            } else if (tokens[0].equalsIgnoreCase("login")) {
+                handleLoginMessage(line, userHandleController);
             }
+        }
+    }
+
+    private void handleLoginMessage(String line, UserHandleController userHandleController) {
+        switch (line) {
+            case ServerWorker.LOGIN_SUCCESS:
+                new ListOnlineController(userHandleController.getUserHandle()) {{
+                    addUserStatusListener(this.model);
+                }};
+                //if Login is successful close dispose userHandle
+                userHandleController.getView().setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                userHandleController.getView().dispatchEvent(new WindowEvent(userHandleController.getView(), WindowEvent.WINDOW_CLOSING));
+                break;
+            case ServerWorker.LOGIN_FAILED_NOT_LOGGED_IN:
+                System.out.println(ServerWorker.LOGIN_FAILED_NOT_LOGGED_IN);
+                break;
+            case ServerWorker.LOGIN_FAILED_NOT_ENOUGH_TOKENS:
+                System.out.println(ServerWorker.LOGIN_FAILED_NOT_ENOUGH_TOKENS);
+                break;
+            case ServerWorker.LOGIN_FAILED_LOGGED_IN:
+                System.out.println(ServerWorker.LOGIN_FAILED_LOGGED_IN);
+                break;
+            case ServerWorker.LOGIN_FAILED_ALREADY_LOGGED_IN:
+                System.out.println(ServerWorker.LOGIN_FAILED_ALREADY_LOGGED_IN);
+                break;
+            default:
+                //default is login success
+//                userHandleController.getView().setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//                userHandleController.getView().dispatchEvent(new WindowEvent(userHandleController.getView(), WindowEvent.WINDOW_CLOSING));
+                break;
         }
     }
 

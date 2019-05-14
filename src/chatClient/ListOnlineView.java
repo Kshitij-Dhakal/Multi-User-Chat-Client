@@ -5,15 +5,6 @@ import javax.swing.*;
 public class ListOnlineView extends JFrame {
     private JPanel panel = new JPanel();
     private JList<String> list;
-
-    public DefaultListModel<String> getListModel() {
-        return listModel;
-    }
-
-    public void setListModel(DefaultListModel<String> listModel) {
-        this.listModel = listModel;
-    }
-
     private DefaultListModel<String> listModel = new DefaultListModel<>();
 
     ListOnlineView() {
@@ -27,6 +18,14 @@ public class ListOnlineView extends JFrame {
         setVisible(true);
         setSize(400, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    public DefaultListModel<String> getListModel() {
+        return listModel;
+    }
+
+    public void setListModel(DefaultListModel<String> listModel) {
+        this.listModel = listModel;
     }
 
 }

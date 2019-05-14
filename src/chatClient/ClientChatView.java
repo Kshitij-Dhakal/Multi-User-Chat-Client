@@ -8,41 +8,7 @@ public class ClientChatView extends JFrame {
     private ContentBoxPanel contentBox = new ContentBoxPanel();
     private JTextField messageBox = new JTextField();
     private JButton sendButton = new JButton("Send");
-
-    public ContentBoxPanel getContentBox() {
-        return contentBox;
-    }
-
-    public void setContentBox(ContentBoxPanel contentBox) {
-        this.contentBox = contentBox;
-    }
-
-    public JTextField getMessageBox() {
-        return messageBox;
-    }
-
-    public void setMessageBox(JTextField messageBox) {
-        this.messageBox = messageBox;
-    }
-
-    public JButton getSendButton() {
-        return sendButton;
-    }
-
-    public void setSendButton(JButton sendButton) {
-        this.sendButton = sendButton;
-    }
-
-    public JPanel getChatViewPanel() {
-        return chatViewPanel;
-    }
-
-    public void setChatViewPanel(JPanel chatViewPanel) {
-        this.chatViewPanel = chatViewPanel;
-    }
-
     private JPanel chatViewPanel = new JPanel();
-
 
     public ClientChatView() {
         JScrollPane contentBoxScrollPane = new JScrollPane(contentBox);
@@ -103,6 +69,38 @@ public class ClientChatView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 500);
         getContentPane().add(chatViewPanel);
+    }
+
+    public ContentBoxPanel getContentBox() {
+        return contentBox;
+    }
+
+    public void setContentBox(ContentBoxPanel contentBox) {
+        this.contentBox = contentBox;
+    }
+
+    public JTextField getMessageBox() {
+        return messageBox;
+    }
+
+    public void setMessageBox(JTextField messageBox) {
+        this.messageBox = messageBox;
+    }
+
+    public JButton getSendButton() {
+        return sendButton;
+    }
+
+    public void setSendButton(JButton sendButton) {
+        this.sendButton = sendButton;
+    }
+
+    public JPanel getChatViewPanel() {
+        return chatViewPanel;
+    }
+
+    public void setChatViewPanel(JPanel chatViewPanel) {
+        this.chatViewPanel = chatViewPanel;
     }
 
     public static class SentChatBox extends JLabel {
