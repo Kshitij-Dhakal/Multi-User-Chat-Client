@@ -1,17 +1,47 @@
 package chatClient;
 
 import javax.swing.*;
-import javax.swing.text.Document;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class ClientChatView extends JFrame {
-    ContentBoxPanel contentBox = new ContentBoxPanel();
-    JTextField messageBox = new JTextField();
-    JButton sendButton = new JButton("Send");
-    JPanel chatViewPanel = new JPanel();
+    private ContentBoxPanel contentBox = new ContentBoxPanel();
+    private JTextField messageBox = new JTextField();
+    private JButton sendButton = new JButton("Send");
+
+    public ContentBoxPanel getContentBox() {
+        return contentBox;
+    }
+
+    public void setContentBox(ContentBoxPanel contentBox) {
+        this.contentBox = contentBox;
+    }
+
+    public JTextField getMessageBox() {
+        return messageBox;
+    }
+
+    public void setMessageBox(JTextField messageBox) {
+        this.messageBox = messageBox;
+    }
+
+    public JButton getSendButton() {
+        return sendButton;
+    }
+
+    public void setSendButton(JButton sendButton) {
+        this.sendButton = sendButton;
+    }
+
+    public JPanel getChatViewPanel() {
+        return chatViewPanel;
+    }
+
+    public void setChatViewPanel(JPanel chatViewPanel) {
+        this.chatViewPanel = chatViewPanel;
+    }
+
+    private JPanel chatViewPanel = new JPanel();
 
 
     public ClientChatView() {
@@ -22,15 +52,16 @@ public class ClientChatView extends JFrame {
         contentBox.addSend("How are you doing?");
         contentBox.addReceived("I'm Fine. How are you?");
         contentBox.addReceived("Where are you rn?");
-        //Experimental for adding html/css
+        contentBox.addSend("I am in ngt");
 
+
+        //Experimental for adding html/css
 /*
         contentBox.setEditable(false);
         HTMLEditorKit htmlEditorKit = new HTMLEditorKit();
         contentBox.setEditorKit(htmlEditorKit);
         JScrollPane contentBoxScrollPane = new JScrollPane(contentBox);
         StyleSheet styleSheet = htmlEditorKit.getStyleSheet();
-        //TODO add stylesheed for sender and receiver
         styleSheet.addRule("#sent {\n" +
                 "    position: relative;\n" +
                 "    float: right;\n" +
@@ -60,7 +91,7 @@ public class ClientChatView extends JFrame {
 
 
         chatViewPanel.setLayout(new BorderLayout());
-        chatViewPanel.add(contentBoxScrollPane,BorderLayout.CENTER);
+        chatViewPanel.add(contentBoxScrollPane, BorderLayout.CENTER);
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BorderLayout());
         bottomPanel.add(messageBox, BorderLayout.CENTER);
@@ -71,10 +102,29 @@ public class ClientChatView extends JFrame {
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(500, 500);
-        add(chatViewPanel);
+        getContentPane().add(chatViewPanel);
     }
 
-    public static void main(String[] args) {
-        new ClientChatView();
+    public static class SentChatBox extends JLabel {
+        public SentChatBox(String text) {
+            super(text);
+            setBackground(new Color(152, 152, 224));
+            setOpaque(true);
+            setBorder(new EmptyBorder(10, 10, 10, 10));
+            setForeground(Color.WHITE);
+        }
     }
+
+    public static class ReceivedChatBox extends JLabel {
+        public ReceivedChatBox(String text) {
+            super(text);
+//        setBackground(new Color( 239, 239, 239));
+            setBackground(Color.LIGHT_GRAY);
+            setOpaque(true);
+            setBorder(new EmptyBorder(10, 10, 10, 10));
+//        setForeground(Color.BLACK);
+        }
+    }
+
+
 }

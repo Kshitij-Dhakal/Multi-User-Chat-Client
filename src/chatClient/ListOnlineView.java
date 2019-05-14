@@ -1,0 +1,32 @@
+package chatClient;
+
+import javax.swing.*;
+
+public class ListOnlineView extends JFrame {
+    private JPanel panel = new JPanel();
+    private JList<String> list;
+
+    public DefaultListModel<String> getListModel() {
+        return listModel;
+    }
+
+    public void setListModel(DefaultListModel<String> listModel) {
+        this.listModel = listModel;
+    }
+
+    private DefaultListModel<String> listModel = new DefaultListModel<>();
+
+    ListOnlineView() {
+        list = new JList<>(listModel);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.setLayoutOrientation(JList.VERTICAL);
+        list.setVisibleRowCount(-1);
+        JScrollPane scrollPane = new JScrollPane(list);
+
+        getContentPane().add(scrollPane);
+        setVisible(true);
+        setSize(400, 600);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+}
