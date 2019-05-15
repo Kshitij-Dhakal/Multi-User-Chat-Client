@@ -1,24 +1,10 @@
 package chatClient;
 
 public class ClientChatModel {
-    ClientChatView chatView;
 
-    public ClientChatModel() {
-    }
+    private ClientChatView view;
 
-    public ClientChatView getChatView() {
-        return chatView;
-    }
-
-    public void setChatView(ClientChatView chatView) {
-        this.chatView = chatView;
-    }
-
-    public void sent(String message) {
-
-    }
-
-    public void received(String message) {
-
+    public ClientChatModel(ClientChatView view) {
+        this.view = view;
     }
 }
