@@ -1,9 +1,9 @@
 package chatClient.models;
 
 import chatClient.ClientChatFactory;
-import chatClient.views.ListOnlineView;
-import chatClient.UserStatusListener;
 import chatClient.controllers.ClientChatController;
+import chatClient.views.ListOnlineView;
+import dependencies.Listeners.UserStatusListener;
 
 public class ListOnlineModel implements UserStatusListener {
     ListOnlineView view;
@@ -25,6 +25,9 @@ public class ListOnlineModel implements UserStatusListener {
     }
 
     public ClientChatController getClientChatController(String sendTo) {
-        return ClientChatFactory.getClientChat(sendTo);
+        ClientChatController clientChat = ClientChatFactory.getClientChat(sendTo);
+//        clientChat.getView().setVisible(true);
+        clientChat.getView().enableSend();
+        return clientChat;
     }
 }

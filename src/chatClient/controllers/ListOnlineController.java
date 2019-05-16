@@ -11,10 +11,6 @@ public class ListOnlineController {
     ListOnlineView view;
     private String userHandle;
 
-    public ListOnlineModel getModel() {
-        return model;
-    }
-
     public ListOnlineController(String userHandle) {
         this.userHandle = userHandle;
         view = new ListOnlineView();
@@ -46,5 +42,9 @@ public class ListOnlineController {
             }
         });
 
+    }
+
+    public ListOnlineModel getModel() {
+        return model;
     }
 }

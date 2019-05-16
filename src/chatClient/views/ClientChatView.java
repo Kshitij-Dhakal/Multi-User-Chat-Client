@@ -20,9 +20,13 @@ public class ClientChatView extends JFrame {
         panel.add(getBottomPanel(), BorderLayout.SOUTH);
 
         mainPanel.add(panel);
-        setVisible(true);
+//        setVisible(true);
         setSize(500, 500);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
+    }
+
+    public JTextField getMessageField() {
+        return messageField;
     }
 
     private JPanel getBottomPanel() {
@@ -61,5 +65,18 @@ public class ClientChatView extends JFrame {
 
     public void addActionListener(ActionListener listener) {
         this.sendButton.addActionListener(listener);
+    }
+
+    public void disableSend() {
+        setMessageText("User Went Offline");
+        getMessageField().setEnabled(false);
+        sendButton.setEnabled(false);
+    }
+
+    public void enableSend() {
+        setVisible(true);
+        setMessageText("");
+        getMessageField().setEnabled(true);
+        sendButton.setEnabled(true);
     }
 }

@@ -1,8 +1,8 @@
 package chatClient.controllers;
 
+import chatClient.Users;
 import chatClient.models.ClientChatModel;
 import chatClient.views.ClientChatView;
-import chatClient.Users;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,5 +39,9 @@ public class ClientChatController {
     public void setUser(Users user) {
         this.user = user;
         this.getView().setTitle(this.user.getUserHandle());
+    }
+
+    public void addActionListener(ActionListener listener) {
+        this.view.addActionListener(listener);
     }
 }

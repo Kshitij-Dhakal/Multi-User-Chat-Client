@@ -11,7 +11,6 @@ public class ClientChatFactory {
         for (ClientChatContainer clientChatContainer : clientChatList) {
             if (clientChatContainer.key.equalsIgnoreCase(key)) {
 //                System.out.println("Returning existing controller");
-                clientChatContainer.value.getView().setVisible(true);
                 return clientChatContainer.value;
             }
         }
@@ -19,7 +18,9 @@ public class ClientChatFactory {
             setUser(new Users() {{
                 setUserHandle(key);
             }});
+            addActionListener(new ChatClientMain.SendAction(key, getView().getMessageField()));
         }};
+
         clientChatList.add(new ClientChatContainer(key, value));
         System.out.println("Creating new controller");
         return value;
