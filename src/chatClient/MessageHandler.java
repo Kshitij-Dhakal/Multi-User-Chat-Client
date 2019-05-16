@@ -1,5 +1,7 @@
 package chatClient;
 
+import chatClient.controllers.ClientChatController;
+
 public class MessageHandler implements MessageListener {
     ClientChatController controller;
 

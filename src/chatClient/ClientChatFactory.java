@@ -1,5 +1,7 @@
 package chatClient;
 
+import chatClient.controllers.ClientChatController;
+
 import java.util.ArrayList;
 
 public class ClientChatFactory {

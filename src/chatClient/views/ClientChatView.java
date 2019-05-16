@@ -1,4 +1,7 @@
-package chatClient;
+package chatClient.views;
+
+import chatClient.ContentBoxListRenderer;
+import chatClient.Messages;
 
 import javax.swing.*;
 import java.awt.*;

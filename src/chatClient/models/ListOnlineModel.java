@@ -1,4 +1,9 @@
-package chatClient;
+package chatClient.models;
+
+import chatClient.ClientChatFactory;
+import chatClient.views.ListOnlineView;
+import chatClient.UserStatusListener;
+import chatClient.controllers.ClientChatController;
 
 public class ListOnlineModel implements UserStatusListener {
     ListOnlineView view;

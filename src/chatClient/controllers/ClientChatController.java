@@ -1,4 +1,8 @@
-package chatClient;
+package chatClient.controllers;
+
+import chatClient.models.ClientChatModel;
+import chatClient.views.ClientChatView;
+import chatClient.Users;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -1,4 +1,4 @@
-package chatClient;
+package chatClient.views;
 
 import javax.swing.*;
 import java.awt.event.MouseListener;
@@ -8,7 +8,7 @@ public class ListOnlineView extends JFrame {
     private JList<String> list;
     private DefaultListModel<String> listModel = new DefaultListModel<>();
 
-    ListOnlineView() {
+    public ListOnlineView() {
         list = new JList<>(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setLayoutOrientation(JList.VERTICAL);

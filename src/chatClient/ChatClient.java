@@ -1,5 +1,6 @@
 package chatClient;
 
+import chatClient.controllers.ListOnlineController;
 import chatServer.ServerWorker;
 import userHandleDesktop.UserHandleController;
 
@@ -65,7 +66,7 @@ public class ChatClient {
         switch (line) {
             case ServerWorker.LOGIN_SUCCESS:
                 new ListOnlineController(userHandleController.getUserHandle()) {{
-                    addUserStatusListener(this.model);
+                    addUserStatusListener(this.getModel());
                 }};
                 //if Login is successful close dispose userHandle
                 userHandleController.getView().setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

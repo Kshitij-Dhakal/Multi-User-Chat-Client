@@ -1,4 +1,7 @@
-package chatClient;
+package chatClient.controllers;
+
+import chatClient.models.ListOnlineModel;
+import chatClient.views.ListOnlineView;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -7,6 +10,10 @@ public class ListOnlineController {
     ListOnlineModel model;
     ListOnlineView view;
     private String userHandle;
+
+    public ListOnlineModel getModel() {
+        return model;
+    }
 
     public ListOnlineController(String userHandle) {
         this.userHandle = userHandle;

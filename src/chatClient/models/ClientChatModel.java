@@ -1,4 +1,6 @@
-package chatClient;
+package chatClient.models;
+
+import chatClient.views.ClientChatView;
 
 public class ClientChatModel {
 
