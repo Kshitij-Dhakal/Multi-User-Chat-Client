@@ -9,6 +9,7 @@ public class MessageHandler implements MessageListener {
     public void onMessage(String fromLogin, String messageText) {
         System.out.println("MessageHandler : onMessage");
         controller = ClientChatFactory.getClientChat(fromLogin);
+        controller.getView().receive(messageText);
         //TODO add message handler
     }
 }

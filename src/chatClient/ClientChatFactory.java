@@ -10,7 +10,7 @@ public class ClientChatFactory {
     public static ClientChatController getClientChat(String key) {
         for (ClientChatContainer clientChatContainer : clientChatList) {
             if (clientChatContainer.key.equalsIgnoreCase(key)) {
-                System.out.println("Returning existing controller");
+//                System.out.println("Returning existing controller");
                 clientChatContainer.value.getView().setVisible(true);
                 return clientChatContainer.value;
             }
