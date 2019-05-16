@@ -18,4 +18,8 @@ public class ListOnlineModel implements UserStatusListener {
     public void offline(String login) {
         view.getListModel().removeElement(login);
     }
+
+    public ClientChatController getClientChatController(String sendTo) {
+        return ClientChatFactory.getClientChat(sendTo);
+    }
 }

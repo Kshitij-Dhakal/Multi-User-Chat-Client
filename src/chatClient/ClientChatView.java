@@ -2,31 +2,61 @@ package chatClient;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class ClientChatView extends JFrame {
 
+    private DefaultListModel<Messages> messageList;
+    private JTextField messageField = new JTextField();
+    private JButton sendButton = new JButton("Send");
+
     public ClientChatView() throws HeadlessException {
-        JPanel panel = (JPanel) getContentPane();
-        DefaultListModel<Messages> messageList = new DefaultListModel<>();
-        messageList.addElement(new Messages() {{
-            sent("Hello");
-        }});
-        messageList.addElement(new Messages() {{
-            sent("How are you?");
-        }});
-        messageList.addElement(new Messages() {{
-            recieved("Hi");
-        }});
-        messageList.addElement(new Messages() {{
-            recieved("I am fine.");
-        }});
+        JPanel mainPanel = (JPanel) getContentPane();
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(getMessagePanel(), BorderLayout.CENTER);
+        panel.add(getBottomPanel(), BorderLayout.SOUTH);
 
-
-        panel.add(new JScrollPane(new JList<Messages>(messageList) {{
-            setCellRenderer(new ContentBoxListRenderer());
-        }}));
+        mainPanel.add(panel);
         setVisible(true);
         setSize(500, 500);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(HIDE_ON_CLOSE);
+    }
+
+    private JPanel getBottomPanel() {
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(messageField, BorderLayout.CENTER);
+        bottomPanel.add(sendButton, BorderLayout.EAST);
+        return bottomPanel;
+    }
+
+    private JScrollPane getMessagePanel() {
+        this.messageList = new DefaultListModel<>();
+        return new JScrollPane(new JList<Messages>(messageList) {{
+            setCellRenderer(new ContentBoxListRenderer());
+        }});
+    }
+
+    public void send(String message) {
+        messageList.addElement(new Messages() {{
+            sent(message);
+        }});
+    }
+
+    public void receive(String message) {
+        messageList.addElement(new Messages() {{
+            recieved(message);
+        }});
+    }
+
+    public String getMessageText() {
+        return this.messageField.getText().trim();
+    }
+
+    public void setMessageText(String messageText) {
+        this.messageField.setText(messageText);
+    }
+
+    public void addActionListener(ActionListener listener) {
+        this.sendButton.addActionListener(listener);
     }
 }

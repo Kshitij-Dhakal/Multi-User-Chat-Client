@@ -5,6 +5,7 @@ public class MessageHandler implements MessageListener {
 
     @Override
     public void onMessage(String fromLogin, String messageText) {
+        System.out.println("MessageHandler : onMessage");
         controller = ClientChatFactory.getClientChat(fromLogin);
         //TODO add message handler
     }

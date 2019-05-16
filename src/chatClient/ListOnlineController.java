@@ -1,5 +1,8 @@
 package chatClient;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 public class ListOnlineController {
     ListOnlineModel model;
     ListOnlineView view;
@@ -9,5 +12,32 @@ public class ListOnlineController {
         this.userHandle = userHandle;
         view = new ListOnlineView();
         model = new ListOnlineModel(view, this.userHandle);
+        view.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                model.getClientChatController(view.getList().getSelectedValue());
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
     }
 }

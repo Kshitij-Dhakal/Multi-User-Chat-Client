@@ -9,11 +9,14 @@ public class ChatClientMain implements LoginListener {
 
     private ChatClient localhost;
     private UserHandleController userHandleController;
+    private MessageHandler messageHandler;
 
     public ChatClientMain() {
+        messageHandler = new MessageHandler();
         userHandleController = new UserHandleController();
         userHandleController.addLoginListener(this);
         localhost = new ChatClient("localhost", 8818, userHandleController);
+        localhost.addMessageListener(messageHandler);
     }
 
     public static void main(String[] args) {

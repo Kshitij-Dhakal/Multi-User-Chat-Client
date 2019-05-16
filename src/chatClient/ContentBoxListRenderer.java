@@ -6,16 +6,16 @@ import java.awt.*;
 
 public class ContentBoxListRenderer extends JPanel implements ListCellRenderer<Messages> {
 
-    private JPanel messagePanel;
     JLabel messageText = new JLabel();
+    private JPanel messagePanel;
 
     public ContentBoxListRenderer() {
-        setBorder(new EmptyBorder(5,5,0,5));
+        setBorder(new EmptyBorder(5, 5, 0, 5));
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
         messagePanel = this;
         messageText.setOpaque(true);
-        messageText.setBorder(new EmptyBorder(10,10,10,10));
+        messageText.setBorder(new EmptyBorder(10, 10, 10, 10));
 //        add(messagePanel);
     }
 
@@ -26,7 +26,7 @@ public class ContentBoxListRenderer extends JPanel implements ListCellRenderer<M
             messageText.setBackground(new Color(79, 170, 226));
             messageText.setForeground(Color.WHITE);
             messagePanel.add(messageText, BorderLayout.EAST);
-        }else{
+        } else {
             messageText.setBackground(new Color(206, 219, 226));
             messageText.setForeground(Color.BLACK);
             messagePanel.add(messageText, BorderLayout.WEST);

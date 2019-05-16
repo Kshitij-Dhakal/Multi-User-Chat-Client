@@ -1,6 +1,7 @@
 package chatClient;
 
 import javax.swing.*;
+import java.awt.event.MouseListener;
 
 public class ListOnlineView extends JFrame {
     private JPanel panel = new JPanel();
@@ -26,6 +27,14 @@ public class ListOnlineView extends JFrame {
 
     public void setListModel(DefaultListModel<String> listModel) {
         this.listModel = listModel;
+    }
+
+    public JList<String> getList() {
+        return list;
+    }
+
+    public void addMouseListener(MouseListener listener) {
+        list.addMouseListener(listener);
     }
 
 }

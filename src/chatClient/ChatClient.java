@@ -47,12 +47,13 @@ public class ChatClient {
         String line;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(serverIn));
         while ((line = bufferedReader.readLine()) != null) {
+            System.out.println(line);
             String[] tokens = line.split(" ");
             if (tokens[0].equalsIgnoreCase("online")) {
                 handleOnlineCommand(tokens);
             } else if (tokens[0].equalsIgnoreCase("offline")) {
                 handleOfflineCommand(tokens);
-            } else if (tokens[0].equalsIgnoreCase("msg")) {
+            } else if (tokens[0].equalsIgnoreCase("message")) {
                 handleMessageCommand(line);
             } else if (tokens[0].equalsIgnoreCase("login")) {
                 handleLoginMessage(line, userHandleController);
@@ -96,6 +97,7 @@ public class ChatClient {
             String from = tokens[1];
             String message = tokens[2];
             for (MessageListener messageListener : messageListeners) {
+                System.out.println("Chat Client : Notifying Observers");
                 messageListener.onMessage(from, message);
             }
         }
