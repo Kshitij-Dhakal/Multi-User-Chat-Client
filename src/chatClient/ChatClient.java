@@ -4,13 +4,14 @@ import chatServer.ServerWorker;
 import dependencies.Listeners.LoginListener;
 import dependencies.Listeners.MessageListener;
 import dependencies.Listeners.UserStatusListener;
-import userHandleDesktop.UserHandleController;
+import userHandleDesktop.UI.UserHandleController;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
 public class ChatClient {
+    ChatClientUser currentLogin;
     private ArrayList<UserStatusListener> userStatusListeners = new ArrayList<>();
     private ArrayList<MessageListener> messageListeners = new ArrayList<>();
     private LoginListener listener;
@@ -45,8 +46,9 @@ public class ChatClient {
         this.listener = listener;
     }
 
-    public void login(String userHandle) throws IOException {
-        send("login " + userHandle);
+    public void login(ChatClientUser currentLogin) throws IOException {
+        this.currentLogin = currentLogin;
+        send("login " + currentLogin.getUserHandle());
     }
 
     private void listenServer() throws IOException {

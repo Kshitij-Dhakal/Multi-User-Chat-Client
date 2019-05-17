@@ -1,10 +1,10 @@
 package chatClient;
 
-import chatClient.controllers.ClientChatController;
+import chatClient.messageUI.MessageController;
 import dependencies.Listeners.MessageListener;
 
 public class MessageHandler implements MessageListener {
-    ClientChatController controller;
+    MessageController controller;
 
     @Override
     public void onMessage(String fromLogin, String messageText) {

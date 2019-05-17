@@ -1,8 +1,8 @@
 package chatClient;
 
-import chatClient.controllers.ListOnlineController;
+import chatClient.ListOnlineUI.ListOnlineController;
 import dependencies.Listeners.LoginListener;
-import userHandleDesktop.UserHandleController;
+import userHandleDesktop.UI.UserHandleController;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -12,6 +12,7 @@ import java.io.IOException;
 public class ChatClientMain implements LoginListener {
 
     private static ChatClient localhost;
+    ChatClientUser currentLogin;
     private UserHandleController userHandleController;
     private MessageHandler messageHandler;
 
@@ -31,9 +32,11 @@ public class ChatClientMain implements LoginListener {
 
     @Override
     public void onDatabaseLogin() {
+
         try {
-            String userHandle = userHandleController.getUserHandle();
-            localhost.login(userHandle);
+            //TODO getmodel from userHandleController and convert into ChatClientUser and pass it to localhost.login
+            currentLogin = new ChatClientUser(userHandleController.getModel());
+            localhost.login(currentLogin);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,7 +45,7 @@ public class ChatClientMain implements LoginListener {
 
     @Override
     public void onChatServerLogin() {
-        new ListOnlineController(userHandleController.getUserHandle()) {{
+        new ListOnlineController(currentLogin.getUserHandle()) {{
             localhost.addUserStatusListener(this.getModel());
         }};
         userHandleController.getView().dispose();
