@@ -19,7 +19,7 @@ public class ClientChatFactory {
             setUser(new UserHandleModel() {{
 
             }});
-            addActionListener(new ChatClientMain.SendAction(key, getView().getMessageField()));
+            addActionListener(new ChatClientMain.SendAction(key, getView().getMessageField(), getView()));
         }};
 
         clientChatList.add(new ClientChatContainer(key, value));

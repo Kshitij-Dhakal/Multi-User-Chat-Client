@@ -1,6 +1,7 @@
 package chatClient;
 
 import chatClient.ListOnlineUI.ListOnlineController;
+import chatClient.messageUI.MessageView;
 import dependencies.Listeners.LoginListener;
 import userHandleDesktop.UI.UserHandleController;
 
@@ -22,7 +23,6 @@ public class ChatClientMain implements LoginListener {
         userHandleController.setListener(this);
         localhost = new ChatClient("localhost", 8818, userHandleController);
         localhost.addMessageListener(messageHandler);
-        localhost.addUserStatusListener(messageHandler);
         localhost.setLoginListener(this);
     }
 
@@ -46,7 +46,7 @@ public class ChatClientMain implements LoginListener {
     @Override
     public void onChatServerLogin() {
         new ListOnlineController(currentLogin.getUserHandle()) {{
-            localhost.addUserStatusListener(this.getModel());
+            localhost.addMessageListener(this.getModel());
         }};
         userHandleController.getView().dispose();
     }
@@ -54,16 +54,21 @@ public class ChatClientMain implements LoginListener {
     static class SendAction implements ActionListener {
         String to;
         JTextField messageText;
+        MessageView view;
 
-        SendAction(String to, JTextField messageText) {
+        SendAction(String to, JTextField messageText, MessageView view) {
             this.to = to;
             this.messageText = messageText;
+            this.view = view;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                localhost.send("send " + to + " " + messageText.getText());
+                String message = messageText.getText().trim();
+                localhost.send("send " + to + " " + message);
+                view.send(message);
+                messageText.setText("");
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

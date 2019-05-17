@@ -2,6 +2,7 @@ package chatClient;
 
 import chatClient.messageUI.MessageController;
 import dependencies.Listeners.MessageListener;
+import dependencies.User.User;
 
 public class MessageHandler implements MessageListener {
     MessageController controller;
@@ -15,15 +16,15 @@ public class MessageHandler implements MessageListener {
     }
 
     @Override
-    public void online(String login) {
+    public void online(User login) {
 //        controller = ClientChatFactory.getClientChat(login);
 //        controller.getView().enableSend();
     }
 
     @Override
-    public void offline(String login) {
+    public void offline(User login) {
         //TODO do something fancy when user goes offline instead of hiding window
-        controller = ClientChatFactory.getClientChat(login);
+        controller = ClientChatFactory.getClientChat(login.getUserHandle());
 //        controller.getView().setVisible(false);
         controller.getView().disableSend();
     }

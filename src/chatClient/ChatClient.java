@@ -3,16 +3,15 @@ package chatClient;
 import chatServer.ServerWorker;
 import dependencies.Listeners.LoginListener;
 import dependencies.Listeners.MessageListener;
-import dependencies.Listeners.UserStatusListener;
 import userHandleDesktop.UI.UserHandleController;
 
 import java.io.*;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ChatClient {
     ChatClientUser currentLogin;
-    private ArrayList<UserStatusListener> userStatusListeners = new ArrayList<>();
     private ArrayList<MessageListener> messageListeners = new ArrayList<>();
     private LoginListener listener;
     private String serverName;
@@ -33,6 +32,10 @@ public class ChatClient {
                     } catch (IOException e) {
                         System.err.println("ChatClient : Server Disconnected!");
                         e.printStackTrace();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
                 }
             };
@@ -51,7 +54,7 @@ public class ChatClient {
         send("login " + currentLogin.getUserHandle());
     }
 
-    private void listenServer() throws IOException {
+    private void listenServer() throws IOException, SQLException, ClassNotFoundException {
         String line;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(serverIn));
         while ((line = bufferedReader.readLine()) != null) {
@@ -87,20 +90,20 @@ public class ChatClient {
         }
     }
 
-    private void handleOnlineCommand(String[] tokens) {
+    private void handleOnlineCommand(String[] tokens) throws SQLException, ClassNotFoundException {
         if (tokens.length == 2) {
             String userHandle = tokens[1];
-            for (UserStatusListener userStatusListener : userStatusListeners) {
-                userStatusListener.online(userHandle);
+            for (MessageListener messageListener : messageListeners) {
+                messageListener.online(ChatClientUser.getUserFromDatabase(userHandle));
             }
         }
     }
 
-    private void handleOfflineCommand(String[] tokens) {
+    private void handleOfflineCommand(String[] tokens) throws SQLException, ClassNotFoundException {
         if (tokens.length == 2) {
             String userHandle = tokens[1];
-            for (UserStatusListener userStatusListener : userStatusListeners) {
-                userStatusListener.offline(userHandle);
+            for (MessageListener messageListener : messageListeners) {
+                messageListener.offline(ChatClientUser.getUserFromDatabase(userHandle));
             }
         }
     }
@@ -120,10 +123,6 @@ public class ChatClient {
             e.printStackTrace();
         }
         return false;
-    }
-
-    public void addUserStatusListener(UserStatusListener listener) {
-        userStatusListeners.add(listener);
     }
 
     public void addMessageListener(MessageListener listener) {

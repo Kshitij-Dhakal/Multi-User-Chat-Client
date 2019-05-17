@@ -1,10 +1,14 @@
 package chatClient.ListOnlineUI;
 
+import chatClient.ChatClientUser;
 import chatClient.ClientChatFactory;
 import chatClient.messageUI.MessageController;
-import dependencies.Listeners.UserStatusListener;
+import dependencies.Listeners.MessageListener;
+import dependencies.User.User;
 
-public class ListOnlineModel implements UserStatusListener {
+import java.util.Iterator;
+
+public class ListOnlineModel implements MessageListener {
     ListOnlineView view;
     private String userHandle;
 
@@ -14,13 +18,19 @@ public class ListOnlineModel implements UserStatusListener {
     }
 
     @Override
-    public void online(String login) {
-        view.getListModel().addElement(login);
+    public void online(User login) {
+        view.getListModel().addElement(new ChatClientUser(login));
     }
 
     @Override
-    public void offline(String login) {
-        view.getListModel().removeElement(login);
+    public void offline(User login) {
+        Iterator<ChatClientUser> iterator = view.getListModel().elements().asIterator();
+        while (iterator.hasNext()) {
+            ChatClientUser user = iterator.next();
+            if (user.getUserHandle().equals(login.getUserHandle())) {
+                view.getListModel().removeElement(user);
+            }
+        }
     }
 
     public MessageController getClientChatController(String sendTo) {
@@ -28,5 +38,19 @@ public class ListOnlineModel implements UserStatusListener {
 //        clientChat.getView().setVisible(true);
         clientChat.getView().enableSend();
         return clientChat;
+    }
+
+    @Override
+    public void onMessage(String fromLogin, String messageText) {
+        int index = 0;
+        Iterator<ChatClientUser> iterator = view.getListModel().elements().asIterator();
+        while (iterator.hasNext()) {
+            ChatClientUser user = iterator.next();
+            if (user.getUserHandle().equals(fromLogin)) {
+                user.addNewMessage();
+                view.getListModel().setElementAt(user, index);
+            }
+            index++;
+        }
     }
 }

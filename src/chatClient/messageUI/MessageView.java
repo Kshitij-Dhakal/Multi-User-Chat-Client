@@ -11,6 +11,7 @@ public class MessageView extends JFrame {
     private DefaultListModel<Messages> messageList;
     private JTextField messageField = new JTextField("Message");
     private JButton sendButton = new JButton("Send");
+
     public MessageView() throws HeadlessException {
         JPanel mainPanel = (JPanel) getContentPane();
         JPanel panel = new JPanel(new BorderLayout());
@@ -72,6 +73,7 @@ public class MessageView extends JFrame {
     }
 
     public void addActionListener(ActionListener listener) {
+        this.messageField.addActionListener(listener);
         this.sendButton.addActionListener(listener);
     }
 

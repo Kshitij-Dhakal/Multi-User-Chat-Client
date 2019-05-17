@@ -1,5 +1,7 @@
 package chatClient.ListOnlineUI;
 
+import chatClient.ChatClientUser;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -15,7 +17,15 @@ public class ListOnlineController {
         view.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                model.getClientChatController(view.getList().getSelectedValue());
+                try {
+                    int index = view.getList().getSelectedIndex();
+                    ChatClientUser selectedValue = view.getList().getSelectedValue();
+                    selectedValue.resetMessageCount();
+                    view.getListModel().setElementAt(selectedValue, index);
+                    model.getClientChatController(selectedValue.getUserHandle());
+                } catch (Exception e1) {
+                    System.err.println("List Empty");
+                }
             }
 
             @Override
