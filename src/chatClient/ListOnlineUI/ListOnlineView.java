@@ -1,27 +1,39 @@
 package chatClient.ListOnlineUI;
 
 import chatClient.ChatClientUser;
+import chatClient.ClientChatFactory;
+import chatClient.messageUI.MessageController;
 import dependencies.User.User;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseListener;
 
 public class ListOnlineView extends JFrame {
     private JList<ChatClientUser> list;
-    private DefaultListModel<ChatClientUser> listModel = new DefaultListModel<>() {
-    };
+    private DefaultListModel<ChatClientUser> listModel = new DefaultListModel<>();
+    private JPanel messageBox = new JPanel(new CardLayout());
 
     public ListOnlineView() {
-        list = new JList<>(listModel);
-        list.setCellRenderer(new ListOnlineRenderer());
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setLayoutOrientation(JList.VERTICAL);
-        list.setVisibleRowCount(-1);
-        JScrollPane scrollPane = new JScrollPane(list);
+        JScrollPane scrollPane = getLeftPane();
+        scrollPane.setSize(150, 480);
+        JPanel panel = (JPanel) getContentPane();
+        setLayout(new BorderLayout());
 
-        getContentPane().add(scrollPane);
+        messageBox.add(new JLabel("Send Message") {{
+            setHorizontalAlignment(JLabel.CENTER);
+            setForeground(Color.GRAY);
+        }}, "empty");
+
+
+        panel.add(scrollPane, BorderLayout.WEST);
+        panel.add(messageBox, BorderLayout.CENTER);
+//        JDesktopPane desktopPane = new JDesktopPane();
+//        desktopPane.add(scrollPane);
+//        setContentPane(desktopPane);
+//        getContentPane().add(scrollPane);
         setVisible(true);
-        setSize(400, 600);
+        setSize(640, 480);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
@@ -54,6 +66,34 @@ public class ListOnlineView extends JFrame {
         }};
 
 
+    }
+
+    public void setMessageBox(String userHandle) {
+        CardLayout layout = (CardLayout) messageBox.getLayout();
+        MessageController clientChat = ClientChatFactory.getClientChat(userHandle);
+        boolean componentAlreadyExists = false;
+        for (Component component : messageBox.getComponents()) {
+            if (component.equals(clientChat.getView()))
+                componentAlreadyExists = true;
+        }
+        if (componentAlreadyExists) {
+//            System.out.println("Component already exists");
+            layout.show(messageBox, userHandle);
+        } else {
+            System.out.println("ListOnlineView : Creating new component");
+            messageBox.add(clientChat.getView(), userHandle);
+            layout.show(messageBox, userHandle);
+        }
+        setTitle(userHandle);
+    }
+
+    private JScrollPane getLeftPane() {
+        list = new JList<>(listModel);
+        list.setCellRenderer(new ListOnlineRenderer());
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.setLayoutOrientation(JList.VERTICAL);
+        list.setVisibleRowCount(-1);
+        return new JScrollPane(list);
     }
 
     public DefaultListModel<ChatClientUser> getListModel() {

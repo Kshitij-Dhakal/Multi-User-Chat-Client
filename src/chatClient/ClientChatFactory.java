@@ -23,7 +23,7 @@ public class ClientChatFactory {
         }};
 
         clientChatList.add(new ClientChatContainer(key, value));
-        System.out.println("Creating new controller");
+        System.out.println("ClientChatFactory : Creating new controller");
         return value;
     }
 

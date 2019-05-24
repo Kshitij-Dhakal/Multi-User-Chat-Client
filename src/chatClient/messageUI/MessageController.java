@@ -2,6 +2,7 @@ package chatClient.messageUI;
 
 import userHandleDesktop.UI.UserHandleModel;
 
+import javax.swing.*;
 import java.awt.event.ActionListener;
 
 public class MessageController {
@@ -17,8 +18,14 @@ public class MessageController {
 
     public static void main(String[] args) {
         new MessageController() {{
-            getView().send("Just Doing Fine");
-            getView().receive("Tell me, how's your life going?");
+            new JFrame() {{
+                getView().send("Just Doing Fine");
+                getView().receive("Tell me, how's your life going?");
+                add(getView());
+                setVisible(true);
+                setSize(640, 480);
+                setDefaultCloseOperation(EXIT_ON_CLOSE);
+            }};
         }};
     }
 
@@ -28,7 +35,7 @@ public class MessageController {
 
     public void setUser(UserHandleModel user) {
         this.user = user;
-        this.getView().setTitle(this.user.getUserHandle());
+//        this.getView().setTitle(this.user.getUserHandle());
     }
 
     public void addActionListener(ActionListener listener) {

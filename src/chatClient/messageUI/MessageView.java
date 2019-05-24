@@ -6,28 +6,35 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class MessageView extends JFrame {
+public class MessageView extends JPanel {
 
     private DefaultListModel<Messages> messageList;
     private JTextField messageField = new JTextField("Message");
     private JButton sendButton = new JButton("Send");
 
     public MessageView() throws HeadlessException {
-        JPanel mainPanel = (JPanel) getContentPane();
+//        setBackground(Color.cyan);
+        JPanel mainPanel = this;
+        setLayout(new BorderLayout());
         JPanel panel = new JPanel(new BorderLayout());
+//        panel.setBackground(Color.red);
         panel.add(getMessagePanel(), BorderLayout.CENTER);
         panel.add(getBottomPanel(), BorderLayout.SOUTH);
 
-        mainPanel.add(panel);
+        mainPanel.add(panel, BorderLayout.CENTER);
 //        setVisible(true);
-        setSize(500, 500);
-        setDefaultCloseOperation(HIDE_ON_CLOSE);
-
+//        setDefaultCloseOperation(HIDE_ON_CLOSE);
         addPlaceHolder();
     }
 
     public static void main(String[] args) {
-        new MessageView();
+        new JFrame() {{
+//            setLayout(new GridLayout(1, 1));
+            add(new MessageView());
+            setVisible(true);
+            setSize(640, 480);
+            setDefaultCloseOperation(EXIT_ON_CLOSE);
+        }};
     }
 
     private void addPlaceHolder() {
@@ -64,10 +71,6 @@ public class MessageView extends JFrame {
         }});
     }
 
-    public String getMessageText() {
-        return this.messageField.getText().trim();
-    }
-
     public void setMessageText(String messageText) {
         this.messageField.setText(messageText);
     }
@@ -84,7 +87,7 @@ public class MessageView extends JFrame {
     }
 
     public void enableSend() {
-        setVisible(true);
+//        setVisible(true);
         setMessageText("");
         getMessageField().setEnabled(true);
         sendButton.setEnabled(true);

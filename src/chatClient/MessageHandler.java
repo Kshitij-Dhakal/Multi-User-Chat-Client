@@ -19,6 +19,8 @@ public class MessageHandler implements MessageListener {
     public void online(User login) {
 //        controller = ClientChatFactory.getClientChat(login);
 //        controller.getView().enableSend();
+        controller = ClientChatFactory.getClientChat(login.getUserHandle());
+        controller.getView().enableSend();
     }
 
     @Override
