@@ -10,14 +10,6 @@ public class ChatClientUser extends User {
     int messageCount = 0;
     BigInteger key;
 
-    public void setKey(BigInteger key) {
-        this.key = key;
-    }
-
-    public BigInteger getKey() {
-        return key;
-    }
-
     public ChatClientUser(User user) {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
@@ -26,6 +18,14 @@ public class ChatClientUser extends User {
 
     public static User getUserFromDatabase(String userHandle) throws SQLException, ClassNotFoundException {
         return UserDao.getUserInformation(userHandle);
+    }
+
+    public BigInteger getKey() {
+        return key;
+    }
+
+    public void setKey(BigInteger key) {
+        this.key = key;
     }
 
     public void addNewMessage() {

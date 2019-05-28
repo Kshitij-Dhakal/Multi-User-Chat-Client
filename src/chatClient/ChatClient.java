@@ -15,9 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChatClient {
+    static Map<String, BigInteger> keys = new HashMap<String, BigInteger>();
     ChatClientUser currentLogin;
     private KeyGenerator keyGenerator = new KeyGenerator();
-    static Map<String, BigInteger> keys = new HashMap<String, BigInteger>();
     private ArrayList<MessageListener> messageListeners = new ArrayList<>();
     private LoginListener listener;
     private String serverName;
@@ -25,15 +25,6 @@ public class ChatClient {
     private Socket serverSocket;
     private InputStream serverIn;
     private OutputStream serverOut;
-
-    public static BigInteger getKeys(String username) {
-        if (keys.containsKey(username)) {
-            return keys.get(username);
-        } else {
-            System.err.println("ChatClient : Key not created yet!");
-            return new BigInteger("0");
-        }
-    }
 
     public ChatClient(String serverName, int serverPort, UserHandleController userHandleController) {
         this.serverName = serverName;
@@ -60,6 +51,15 @@ public class ChatClient {
         }
     }
 
+    public static BigInteger getKeys(String username) {
+        if (keys.containsKey(username)) {
+            return keys.get(username);
+        } else {
+            System.err.println("ChatClient : Key not created yet!");
+            return new BigInteger("0");
+        }
+    }
+
     public void setLoginListener(LoginListener listener) {
         this.listener = listener;
     }
@@ -73,7 +73,7 @@ public class ChatClient {
         String line;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(serverIn));
         while ((line = bufferedReader.readLine()) != null) {
-            System.out.println("Chat CLient : " + line);
+//            System.out.println("Chat CLient : " + line);
             String[] tokens = line.split(" ");
             if (tokens[0].equalsIgnoreCase("online")) {
                 handleOnlineCommand(tokens);
@@ -96,7 +96,7 @@ public class ChatClient {
             String public_variable = tokens[2];
             keyGenerator.receive(public_variable);
             keys.put(userHandle, keyGenerator.getKey());
-            System.out.println("Chat Client : Received " + userHandle + " " + public_variable);
+            System.out.println("Chat Client : Key Received " + userHandle + " " + public_variable);
         }
     }
 
@@ -112,7 +112,7 @@ public class ChatClient {
             String from = tokens[1];
             String message = tokens[2];
             for (MessageListener messageListener : messageListeners) {
-                System.out.println("Chat Client : Notifying Observers");
+//                System.out.println("Chat Client : Notifying Observers");
                 messageListener.onMessage(from, message);
             }
         }
@@ -124,7 +124,7 @@ public class ChatClient {
             String Ka = keyGenerator.initializeDHKeyExchange();
             String keyCommand = "key " + userHandle + " " + Ka;
             send(keyCommand);
-            System.out.println("Chat Client : sending " + keyCommand);
+            System.out.println("Chat Client : Key Send " + keyCommand);
             for (MessageListener messageListener : messageListeners) {
                 messageListener.online(ChatClientUser.getUserFromDatabase(userHandle));
             }

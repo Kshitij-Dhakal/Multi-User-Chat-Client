@@ -3,7 +3,6 @@ package chatClient.ListOnlineUI;
 import chatClient.ChatClientUser;
 import chatClient.ClientChatFactory;
 import chatClient.messageUI.MessageController;
-import dependencies.Listeners.KeyListener;
 import dependencies.Listeners.MessageListener;
 import dependencies.lib.User;
 
