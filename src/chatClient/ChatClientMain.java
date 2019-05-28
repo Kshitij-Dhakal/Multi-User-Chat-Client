@@ -3,6 +3,7 @@ package chatClient;
 import chatClient.ListOnlineUI.ListOnlineController;
 import chatClient.messageUI.MessageView;
 import dependencies.Listeners.LoginListener;
+import des.Des;
 import userHandleDesktop.UI.UserHandleController;
 
 import javax.swing.*;
@@ -66,7 +67,7 @@ public class ChatClientMain implements LoginListener {
         public void actionPerformed(ActionEvent e) {
             try {
                 String message = messageText.getText().trim();
-                localhost.send("send " + to + " " + message);
+                localhost.send("send " + to + " " + Des.encrypt(localhost.getKeys(to), message));
                 view.send(message);
                 messageText.setText("");
             } catch (IOException ex) {

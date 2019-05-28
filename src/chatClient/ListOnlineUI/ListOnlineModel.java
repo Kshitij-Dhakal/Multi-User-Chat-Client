@@ -3,6 +3,7 @@ package chatClient.ListOnlineUI;
 import chatClient.ChatClientUser;
 import chatClient.ClientChatFactory;
 import chatClient.messageUI.MessageController;
+import dependencies.Listeners.KeyListener;
 import dependencies.Listeners.MessageListener;
 import dependencies.lib.User;
 
@@ -15,6 +16,26 @@ public class ListOnlineModel implements MessageListener {
     public ListOnlineModel(ListOnlineView view, String userHandle) {
         this.view = view;
         this.userHandle = userHandle;
+    }
+
+    /**
+     * When Alice receives reply Kb from Bob she saves her key as K=Kb^Xa mod P
+     *
+     * @param userHandle
+     * @param Ka
+     */
+    public void onKeyReceive(String userHandle, String Ka) {
+
+    }
+
+    /**
+     * When Bob recieves Ka from Alice he saves his key as K=Ka^Xb mod P and sends Alice Kb=g^Xb mod P
+     *
+     * @param userHandle
+     * @param Ka
+     */
+    public void onKeyReply(String userHandle, String Ka) {
+
     }
 
     @Override
@@ -53,4 +74,5 @@ public class ListOnlineModel implements MessageListener {
             index++;
         }
     }
+
 }

@@ -3,15 +3,21 @@ package chatClient;
 import chatServer.ServerWorker;
 import dependencies.Listeners.LoginListener;
 import dependencies.Listeners.MessageListener;
+import des.KeyGenerator;
 import userHandleDesktop.UI.UserHandleController;
 
 import java.io.*;
+import java.math.BigInteger;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChatClient {
     ChatClientUser currentLogin;
+    private KeyGenerator keyGenerator = new KeyGenerator();
+    static Map<String, BigInteger> keys = new HashMap<String, BigInteger>();
     private ArrayList<MessageListener> messageListeners = new ArrayList<>();
     private LoginListener listener;
     private String serverName;
@@ -19,6 +25,15 @@ public class ChatClient {
     private Socket serverSocket;
     private InputStream serverIn;
     private OutputStream serverOut;
+
+    public static BigInteger getKeys(String username) {
+        if (keys.containsKey(username)) {
+            return keys.get(username);
+        } else {
+            System.err.println("ChatClient : Key not created yet!");
+            return new BigInteger("0");
+        }
+    }
 
     public ChatClient(String serverName, int serverPort, UserHandleController userHandleController) {
         this.serverName = serverName;
@@ -58,7 +73,7 @@ public class ChatClient {
         String line;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(serverIn));
         while ((line = bufferedReader.readLine()) != null) {
-            System.out.println(line);
+            System.out.println("Chat CLient : " + line);
             String[] tokens = line.split(" ");
             if (tokens[0].equalsIgnoreCase("online")) {
                 handleOnlineCommand(tokens);
@@ -68,7 +83,20 @@ public class ChatClient {
                 handleMessageCommand(line);
             } else if (tokens[0].equalsIgnoreCase("login")) {
                 handleLoginCommand(line);
+            } else if (tokens[0].equalsIgnoreCase("key")) {
+                handleKeyCommand(tokens);
             }
+        }
+    }
+
+    private void handleKeyCommand(String[] tokens) {
+        //key @username public_variable
+        if (tokens.length == 3) {
+            String userHandle = tokens[1];
+            String public_variable = tokens[2];
+            keyGenerator.receive(public_variable);
+            keys.put(userHandle, keyGenerator.getKey());
+            System.out.println("Chat Client : Received " + userHandle + " " + public_variable);
         }
     }
 
@@ -90,9 +118,13 @@ public class ChatClient {
         }
     }
 
-    private void handleOnlineCommand(String[] tokens) throws SQLException, ClassNotFoundException {
+    private void handleOnlineCommand(String[] tokens) throws SQLException, ClassNotFoundException, IOException {
         if (tokens.length == 2) {
             String userHandle = tokens[1];
+            String Ka = keyGenerator.initializeDHKeyExchange();
+            String keyCommand = "key " + userHandle + " " + Ka;
+            send(keyCommand);
+            System.out.println("Chat Client : sending " + keyCommand);
             for (MessageListener messageListener : messageListeners) {
                 messageListener.online(ChatClientUser.getUserFromDatabase(userHandle));
             }
@@ -102,6 +134,9 @@ public class ChatClient {
     private void handleOfflineCommand(String[] tokens) throws SQLException, ClassNotFoundException {
         if (tokens.length == 2) {
             String userHandle = tokens[1];
+            if (keys.containsKey(userHandle)) {
+                keys.remove(userHandle);
+            }
             for (MessageListener messageListener : messageListeners) {
                 messageListener.offline(ChatClientUser.getUserFromDatabase(userHandle));
             }

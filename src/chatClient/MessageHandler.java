@@ -3,6 +3,7 @@ package chatClient;
 import chatClient.messageUI.MessageController;
 import dependencies.Listeners.MessageListener;
 import dependencies.lib.User;
+import des.Des;
 
 public class MessageHandler implements MessageListener {
     MessageController controller;
@@ -11,7 +12,7 @@ public class MessageHandler implements MessageListener {
     public void onMessage(String fromLogin, String messageText) {
         System.out.println("MessageHandler : onMessage");
         controller = ClientChatFactory.getClientChat(fromLogin);
-        controller.getView().receive(messageText);
+        controller.getView().receive(Des.decrypt(ChatClient.getKeys(fromLogin), messageText));
         //TODO add message handler
     }
 

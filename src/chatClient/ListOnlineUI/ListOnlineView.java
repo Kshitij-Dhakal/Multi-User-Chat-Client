@@ -100,10 +100,6 @@ public class ListOnlineView extends JFrame {
         return listModel;
     }
 
-    public void setListModel(DefaultListModel<ChatClientUser> listModel) {
-        this.listModel = listModel;
-    }
-
     public JList<ChatClientUser> getList() {
         return list;
     }
