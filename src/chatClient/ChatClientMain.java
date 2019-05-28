@@ -35,7 +35,6 @@ public class ChatClientMain implements LoginListener {
     public void onDatabaseLogin() {
 
         try {
-            //TODO getmodel from userHandleController and convert into ChatClientUser and pass it to localhost.login
             currentLogin = new ChatClientUser(userHandleController.getModel());
             localhost.login(currentLogin);
         } catch (IOException e) {

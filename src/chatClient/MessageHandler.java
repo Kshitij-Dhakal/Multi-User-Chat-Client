@@ -13,7 +13,6 @@ public class MessageHandler implements MessageListener {
         System.out.println("MessageHandler : onMessage");
         controller = ClientChatFactory.getClientChat(fromLogin);
         controller.getView().receive(Des.decrypt(ChatClient.getKeys(fromLogin), messageText));
-        //TODO add message handler
     }
 
     @Override
@@ -26,7 +25,6 @@ public class MessageHandler implements MessageListener {
 
     @Override
     public void offline(User login) {
-        //TODO do something fancy when user goes offline instead of hiding window
         controller = ClientChatFactory.getClientChat(login.getUserHandle());
 //        controller.getView().setVisible(false);
         controller.getView().disableSend();
