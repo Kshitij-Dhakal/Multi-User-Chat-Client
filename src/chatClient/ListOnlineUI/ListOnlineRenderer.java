@@ -25,7 +25,7 @@ public class ListOnlineRenderer extends JPanel implements ListCellRenderer<ChatC
             add(userHandle);
             setOpaque(false);
         }}, BorderLayout.CENTER);
-        cellPanel.add(messageBadge, BorderLayout.EAST);
+        cellPanel.add(messageBadge, BorderLayout.WEST);
     }
 
     @Override

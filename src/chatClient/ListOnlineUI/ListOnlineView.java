@@ -3,7 +3,7 @@ package chatClient.ListOnlineUI;
 import chatClient.ChatClientUser;
 import chatClient.ClientChatFactory;
 import chatClient.messageUI.MessageController;
-import dependencies.User.User;
+import dependencies.lib.User;
 
 import javax.swing.*;
 import java.awt.*;

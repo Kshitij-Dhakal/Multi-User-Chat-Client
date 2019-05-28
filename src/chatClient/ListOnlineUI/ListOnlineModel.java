@@ -4,7 +4,7 @@ import chatClient.ChatClientUser;
 import chatClient.ClientChatFactory;
 import chatClient.messageUI.MessageController;
 import dependencies.Listeners.MessageListener;
-import dependencies.User.User;
+import dependencies.lib.User;
 
 import java.util.Iterator;
 

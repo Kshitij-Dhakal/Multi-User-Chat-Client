@@ -2,7 +2,7 @@ package chatClient;
 
 import chatClient.messageUI.MessageController;
 import dependencies.Listeners.MessageListener;
-import dependencies.User.User;
+import dependencies.lib.User;
 
 public class MessageHandler implements MessageListener {
     MessageController controller;

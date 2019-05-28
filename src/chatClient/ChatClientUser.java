@@ -1,6 +1,6 @@
 package chatClient;
 
-import dependencies.User.User;
+import dependencies.lib.User;
 import userHandleDesktop.UserDao;
 
 import java.sql.SQLException;
