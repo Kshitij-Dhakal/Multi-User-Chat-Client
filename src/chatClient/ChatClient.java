@@ -4,7 +4,7 @@ import chatServer.ServerWorker;
 import dependencies.Listeners.LoginListener;
 import dependencies.Listeners.MessageListener;
 import des.KeyGenerator;
-import userHandleDesktop.UI.UserHandleController;
+import des.RSA;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -15,7 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChatClient {
-    static Map<String, BigInteger> keys = new HashMap<String, BigInteger>();
+    RSA rsa;
+    static Map<String, KeySheet> keys = new HashMap<>();
     ChatClientUser currentLogin;
     private KeyGenerator keyGenerator = new KeyGenerator();
     private ArrayList<MessageListener> messageListeners = new ArrayList<>();
@@ -26,7 +27,7 @@ public class ChatClient {
     private InputStream serverIn;
     private OutputStream serverOut;
 
-    public ChatClient(String serverName, int serverPort, UserHandleController userHandleController) {
+    public ChatClient(String serverName, int serverPort) {
         this.serverName = serverName;
         this.serverPort = serverPort;
         if (connect()) {
@@ -53,7 +54,7 @@ public class ChatClient {
 
     public static BigInteger getKeys(String username) {
         if (keys.containsKey(username)) {
-            return keys.get(username);
+            return keys.get(username).getDh_key();
         } else {
             System.err.println("ChatClient : Key not created yet!");
             return new BigInteger("0");
@@ -62,6 +63,10 @@ public class ChatClient {
 
     public void setLoginListener(LoginListener listener) {
         this.listener = listener;
+    }
+
+    public void setRsa(RSA rsa) {
+        this.rsa = rsa;
     }
 
     public void login(ChatClientUser currentLogin) throws IOException {
@@ -89,14 +94,31 @@ public class ChatClient {
         }
     }
 
-    private void handleKeyCommand(String[] tokens) {
-        //key @username public_variable
-        if (tokens.length == 3) {
+    private void handleKeyCommand(String[] tokens) throws IOException {
+        //key @userhandle init rsa_public_variable
+        //key @userhandle exchange dh_key signature
+        if (tokens.length >= 4) {
             String userHandle = tokens[1];
-            String public_variable = tokens[2];
-            keyGenerator.receive(public_variable);
-            keys.put(userHandle, keyGenerator.getKey());
-            System.out.println("Chat Client : Key Received " + userHandle + " " + public_variable);
+            if (tokens[2].equalsIgnoreCase("init")) {
+                BigInteger rsa_public_variable = new BigInteger(tokens[3], 16);
+                if (!keys.containsKey(userHandle)) {
+                    keys.put(userHandle, new KeySheet(rsa_public_variable));
+                    String Ka = keyGenerator.initializeDHKeyExchange();
+                    //TODO send key userhandle and (Key signed using RSA):(key signature)
+                    String sign = rsa.sign(new BigInteger(Ka, 16), keys.get(userHandle).getRsa_public_variable());
+//                    System.out.println("ChatClient : sign = " + sign);
+                    String keyCommand = "key " + userHandle + " exchange " + sign;
+                    send(keyCommand);
+                }
+            } else if (tokens[2].equalsIgnoreCase("exchange")) {
+                BigInteger public_variable = rsa.verify(tokens[3] + " " + tokens[4], keys.get(userHandle).getRsa_public_variable());
+                keyGenerator.receive(public_variable.toString(16));
+                System.out.println("Chat Client : Saving DS KEY");
+                keys.get(userHandle).setDh_key(keyGenerator.getKey());
+//                KeySheet keySheet = keys.get(userHandle);
+//                keySheet.setDh_key(keyGenerator.getKey());
+//                keys.put(userHandle, keySheet);
+            }
         }
     }
 
@@ -121,10 +143,10 @@ public class ChatClient {
     private void handleOnlineCommand(String[] tokens) throws SQLException, ClassNotFoundException, IOException {
         if (tokens.length == 2) {
             String userHandle = tokens[1];
-            String Ka = keyGenerator.initializeDHKeyExchange();
-            String keyCommand = "key " + userHandle + " " + Ka;
+            //TODO send key userhandle and (Key signed using RSA):(key signature)
+            String keyCommand = "key " + userHandle + " init " + rsa.getPublic_variable();
             send(keyCommand);
-            System.out.println("Chat Client : Key Send " + keyCommand);
+//            System.out.println("Chat Client : " + keyCommand);
             for (MessageListener messageListener : messageListeners) {
                 messageListener.online(ChatClientUser.getUserFromDatabase(userHandle));
             }

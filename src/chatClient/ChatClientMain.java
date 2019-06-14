@@ -4,6 +4,7 @@ import chatClient.ListOnlineUI.ListOnlineController;
 import chatClient.messageUI.MessageView;
 import dependencies.Listeners.LoginListener;
 import des.Des;
+import des.RSA;
 import userHandleDesktop.UI.UserHandleController;
 
 import javax.swing.*;
@@ -22,7 +23,7 @@ public class ChatClientMain implements LoginListener {
         messageHandler = new MessageHandler();
         userHandleController = new UserHandleController();
         userHandleController.setListener(this);
-        localhost = new ChatClient("localhost", 8818, userHandleController);
+        localhost = new ChatClient("localhost", 8818);
         localhost.addMessageListener(messageHandler);
         localhost.setLoginListener(this);
     }
@@ -45,6 +46,7 @@ public class ChatClientMain implements LoginListener {
 
     @Override
     public void onChatServerLogin() {
+        localhost.setRsa(new RSA());
         new ListOnlineController(currentLogin.getUserHandle()) {{
             localhost.addMessageListener(this.getModel());
         }};
