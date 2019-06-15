@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChatClient {
-    RSA rsa;
     static Map<String, KeySheet> keys = new HashMap<>();
+    RSA rsa;
     ChatClientUser currentLogin;
     private KeyGenerator keyGenerator = new KeyGenerator();
     private ArrayList<MessageListener> messageListeners = new ArrayList<>();
@@ -108,13 +108,21 @@ public class ChatClient {
                     String sign = rsa.sign(new BigInteger(Ka, 16), keys.get(userHandle).getRsa_public_variable());
 //                    System.out.println("ChatClient : sign = " + sign);
                     String keyCommand = "key " + userHandle + " exchange " + sign;
+//                    System.out.println("Signed key sent : " + keyCommand);
                     send(keyCommand);
                 }
             } else if (tokens[2].equalsIgnoreCase("exchange")) {
                 BigInteger public_variable = rsa.verify(tokens[3] + " " + tokens[4], keys.get(userHandle).getRsa_public_variable());
-                keyGenerator.receive(public_variable.toString(16));
-                System.out.println("Chat Client : Saving DS KEY");
-                keys.get(userHandle).setDh_key(keyGenerator.getKey());
+                //FIXME inconsistent behavior sometimes public_variable is correct sometimes it is null
+                //public variables sent and received are same
+                //send signed key and received signed key are also same
+                if (public_variable != null) {
+                    keyGenerator.receive(public_variable.toString(16));
+                    System.out.println(keyGenerator.getKey());
+                    keys.get(userHandle).setDh_key(keyGenerator.getKey());
+                } else {
+                    System.err.println("ChatClient : Failed to exchange symmetric keys.");
+                }
 //                KeySheet keySheet = keys.get(userHandle);
 //                keySheet.setDh_key(keyGenerator.getKey());
 //                keys.put(userHandle, keySheet);
@@ -144,7 +152,7 @@ public class ChatClient {
         if (tokens.length == 2) {
             String userHandle = tokens[1];
             //TODO send key userhandle and (Key signed using RSA):(key signature)
-            String keyCommand = "key " + userHandle + " init " + rsa.getPublic_variable();
+            String keyCommand = "key " + userHandle + " init " + rsa.getPublic_variable().toString(16);
             send(keyCommand);
 //            System.out.println("Chat Client : " + keyCommand);
             for (MessageListener messageListener : messageListeners) {

@@ -15,11 +15,11 @@ public class KeySheet implements Serializable {
         return rsa_public_variable;
     }
 
-    public void setDh_key(BigInteger dh_key) {
-        this.dh_key = dh_key;
-    }
-
     public BigInteger getDh_key() {
         return dh_key;
+    }
+
+    public void setDh_key(BigInteger dh_key) {
+        this.dh_key = dh_key;
     }
 }
