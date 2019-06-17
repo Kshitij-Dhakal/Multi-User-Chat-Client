@@ -139,11 +139,20 @@ public class ChatClient {
     private void handleMessageCommand(String line) {
         String[] tokens = line.split(" ", 3);
         if (tokens.length == 3) {
-            String from = tokens[1];
-            String message = tokens[2];
-            for (MessageListener messageListener : messageListeners) {
+            if (tokens[1].equalsIgnoreCase("sent")) {
+                if (tokens[2].equalsIgnoreCase("success")) {
+                    //update view only message sent success is received
+                    for (MessageListener messageListener : messageListeners) {
+                        messageListener.onSend();
+                    }
+                }
+            } else {
+                String from = tokens[1];
+                String message = tokens[2];
+                for (MessageListener messageListener : messageListeners) {
 //                System.out.println("Chat Client : Notifying Observers");
-                messageListener.onMessage(from, message);
+                    messageListener.onMessage(from, message);
+                }
             }
         }
     }
@@ -164,9 +173,7 @@ public class ChatClient {
     private void handleOfflineCommand(String[] tokens) throws SQLException, ClassNotFoundException {
         if (tokens.length == 2) {
             String userHandle = tokens[1];
-            if (keys.containsKey(userHandle)) {
-                keys.remove(userHandle);
-            }
+            keys.remove(userHandle);
             for (MessageListener messageListener : messageListeners) {
                 messageListener.offline(ChatClientUser.getUserFromDatabase(userHandle));
             }

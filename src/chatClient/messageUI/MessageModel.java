@@ -8,13 +8,8 @@ public class MessageModel {
         this.view = view;
     }
 
-    public void send(String message, String to) {
+    public void send() {
         //TODO add send method
-        if (message.isEmpty()) {
-
-        } else {
-            view.setMessageText("");
-            view.send(message);
-        }
+        view.send();
     }
 }

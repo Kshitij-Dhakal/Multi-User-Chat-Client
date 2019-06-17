@@ -3,16 +3,7 @@ package chatClient.messageUI;
 public class Messages {
     boolean isSent;
     boolean isReceived;
-    String sender;
     String messageText;
-
-    public boolean isSent() {
-        return isSent;
-    }
-
-    public boolean isReceived() {
-        return isReceived;
-    }
 
     public String getMessageText() {
         return messageText;

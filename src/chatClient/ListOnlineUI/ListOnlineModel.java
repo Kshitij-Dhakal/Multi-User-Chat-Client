@@ -74,4 +74,9 @@ public class ListOnlineModel implements MessageListener {
         }
     }
 
+    @Override
+    public void onSend() {
+
+    }
+
 }

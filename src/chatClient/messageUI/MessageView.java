@@ -59,10 +59,11 @@ public class MessageView extends JPanel {
         }});
     }
 
-    public void send(String message) {
+    public void send() {
         messageList.addElement(new Messages() {{
-            sent(message);
+            sent(messageField.getText().trim());
         }});
+        messageField.setText("");
     }
 
     public void receive(String message) {

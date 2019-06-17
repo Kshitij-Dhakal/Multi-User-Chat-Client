@@ -16,6 +16,13 @@ public class MessageHandler implements MessageListener {
     }
 
     @Override
+    public void onSend() {
+        //when you receive send success message
+//        System.out.println("Executing onsend check");
+        controller.getModel().send();
+    }
+
+    @Override
     public void online(User login) {
 //        controller = ClientChatFactory.getClientChat(login);
 //        controller.getView().enableSend();
