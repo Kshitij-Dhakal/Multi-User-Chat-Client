@@ -3,12 +3,10 @@ package chatClient;
 import dependencies.lib.User;
 import userHandleDesktop.UserDao;
 
-import java.math.BigInteger;
 import java.sql.SQLException;
 
 public class ChatClientUser extends User {
     int messageCount = 0;
-    BigInteger key;
 
     public ChatClientUser(User user) {
         this.firstName = user.getFirstName();
@@ -18,14 +16,6 @@ public class ChatClientUser extends User {
 
     public static User getUserFromDatabase(String userHandle) throws SQLException, ClassNotFoundException {
         return UserDao.getUserInformation(userHandle);
-    }
-
-    public BigInteger getKey() {
-        return key;
-    }
-
-    public void setKey(BigInteger key) {
-        this.key = key;
     }
 
     public void addNewMessage() {

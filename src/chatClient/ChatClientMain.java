@@ -3,6 +3,7 @@ package chatClient;
 import chatClient.ListOnlineUI.ListOnlineController;
 import chatClient.messageUI.MessageView;
 import dependencies.Listeners.LoginListener;
+import dependencies.UI.ProgressWindow;
 import des.Des;
 import des.RSA;
 import userHandleDesktop.UI.UserHandleController;
@@ -13,7 +14,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 public class ChatClientMain implements LoginListener {
-
+    ProgressWindow progressWindow = new ProgressWindow(6);
     private static ChatClient localhost;
     ChatClientUser currentLogin;
     private UserHandleController userHandleController;
@@ -35,7 +36,8 @@ public class ChatClientMain implements LoginListener {
 
     @Override
     public void onDatabaseLogin() {
-
+        progressWindow.setVisible(true);
+        progressWindow.addProgress("Connecting to Chat Server");
         try {
             currentLogin = new ChatClientUser(userHandleController.getModel());
             localhost.login(currentLogin);
@@ -47,7 +49,8 @@ public class ChatClientMain implements LoginListener {
 
     @Override
     public void onChatServerLogin() {
-        localhost.setRsa(new RSA());
+        localhost.setRsa(new RSA(progressWindow));
+        progressWindow.dispose();
         new ListOnlineController(currentLogin.getUserHandle()) {{
             localhost.addMessageListener(this.getModel());
         }};

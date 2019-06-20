@@ -104,7 +104,6 @@ public class ChatClient {
                 if (!keys.containsKey(userHandle)) {
                     keys.put(userHandle, new KeySheet(rsa_public_variable));
                     String Ka = keyGenerator.initializeDHKeyExchange();
-                    //TODO send key userhandle and (Key signed using RSA):(key signature)
                     String sign = rsa.sign(new BigInteger(Ka, 16), keys.get(userHandle).getRsa_public_variable());
 //                    System.out.println("ChatClient : sign = " + sign);
                     String keyCommand = "key " + userHandle + " exchange " + sign;
@@ -113,7 +112,6 @@ public class ChatClient {
                 }
             } else if (tokens[2].equalsIgnoreCase("exchange")) {
                 BigInteger public_variable = rsa.verify(tokens[3] + " " + tokens[4], keys.get(userHandle).getRsa_public_variable());
-                //FIXME inconsistent behavior sometimes public_variable is correct sometimes it is null
                 //public variables sent and received are same
                 //send signed key and received signed key are also same
                 if (public_variable != null) {

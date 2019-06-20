@@ -3,37 +3,26 @@ package chatClient;
 import chatClient.messageUI.MessageController;
 import userHandleDesktop.UI.UserHandleModel;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClientChatFactory {
-    static ArrayList<ClientChatContainer> clientChatList = new ArrayList<>();
+    static Map<String, MessageController> chatContainerMap = new HashMap<>();
 
     public static MessageController getClientChat(String key) {
-        for (ClientChatContainer clientChatContainer : clientChatList) {
-            if (clientChatContainer.key.equalsIgnoreCase(key)) {
-//                System.out.println("Returning existing controller");
-                return clientChatContainer.value;
-            }
-        }
-        MessageController value = new MessageController() {{
-            setUser(new UserHandleModel() {{
-
-            }});
-            addActionListener(new ChatClientMain.SendAction(key, getView().getMessageField(), getView()));
-        }};
-
-        clientChatList.add(new ClientChatContainer(key, value));
-//        System.out.println("ClientChatFactory : Creating new controller");
-        return value;
-    }
-
-    private static class ClientChatContainer {
-        String key;
         MessageController value;
+        if (chatContainerMap.containsKey(key)) {
+            value = chatContainerMap.get(key);
+        } else {
+            value = new MessageController() {{
+                setUser(new UserHandleModel() {{
 
-        public ClientChatContainer(String key, MessageController value) {
-            this.key = key;
-            this.value = value;
+                }});
+                addActionListener(new ChatClientMain.SendAction(key, getView().getMessageField(), getView()));
+            }};
+            chatContainerMap.put(key, value);
         }
+
+        return value;
     }
 }
