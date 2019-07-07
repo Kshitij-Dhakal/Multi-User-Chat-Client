@@ -31,7 +31,7 @@ public class ChatClient {
         this.serverName = serverName;
         this.serverPort = serverPort;
         if (connect()) {
-            Thread serverListener = new Thread() {
+            (new Thread() {
                 @Override
                 public void run() {
                     try {
@@ -45,8 +45,7 @@ public class ChatClient {
                         e.printStackTrace();
                     }
                 }
-            };
-            serverListener.start();
+            }).start();
         } else {
             System.err.println("ChatClient : Connection Failed!");
         }
