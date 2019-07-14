@@ -17,7 +17,6 @@ import java.util.Map;
 public class ChatClient {
     static Map<String, KeySheet> keys = new HashMap<>();
     RSA rsa;
-    ChatClientUser currentLogin;
     private KeyGenerator keyGenerator = new KeyGenerator();
     private ArrayList<MessageListener> messageListeners = new ArrayList<>();
     private LoginListener listener;
@@ -68,9 +67,8 @@ public class ChatClient {
         this.rsa = rsa;
     }
 
-    public void login(ChatClientUser currentLogin) throws IOException {
-        this.currentLogin = currentLogin;
-        send("login " + currentLogin.getUserHandle());
+    public void login(String userhandle, String password) throws IOException {
+        send("login " + userhandle + " " + password);
     }
 
     private void listenServer() throws IOException, SQLException, ClassNotFoundException {
@@ -128,8 +126,10 @@ public class ChatClient {
     }
 
     private void handleLoginCommand(String line) {
-        if (line.equalsIgnoreCase(ServerWorker.LOGIN_SUCCESS)) {
-            listener.onChatServerLogin();
+        System.out.println(line);
+        String[] split = line.split(":");
+        if (split[0].equalsIgnoreCase(ServerWorker.LOGIN_SUCCESS)) {
+            listener.onChatServerLogin(split[1]);
         }
     }
 

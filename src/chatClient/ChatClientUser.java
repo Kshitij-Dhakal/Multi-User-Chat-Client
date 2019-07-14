@@ -1,7 +1,8 @@
 package chatClient;
 
 import dependencies.lib.User;
-import userHandleDesktop.UserDao;
+import dependencies.lib.UserDao;
+import userHandleDesktop.DbConfig;
 
 import java.sql.SQLException;
 
@@ -15,7 +16,7 @@ public class ChatClientUser extends User {
     }
 
     public static User getUserFromDatabase(String userHandle) throws SQLException, ClassNotFoundException {
-        return UserDao.getUserInformation(userHandle);
+        return UserDao.getUserInformation(userHandle, DbConfig.DB_USERNAME, DbConfig.DB_PASSWORD);
     }
 
     public void addNewMessage() {

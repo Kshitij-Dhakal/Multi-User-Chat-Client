@@ -4,6 +4,7 @@ import chatClient.ListOnlineUI.ListOnlineController;
 import chatClient.messageUI.MessageView;
 import dependencies.Listeners.LoginListener;
 import dependencies.UI.ProgressWindow;
+import dependencies.lib.Config;
 import des.Des;
 import des.RSA;
 import userHandleDesktop.UI.UserHandleController;
@@ -16,7 +17,6 @@ import java.io.IOException;
 public class ChatClientMain implements LoginListener {
     ProgressWindow progressWindow = new ProgressWindow(6);
     private static ChatClient localhost;
-    ChatClientUser currentLogin;
     private UserHandleController userHandleController;
     private MessageHandler messageHandler;
 
@@ -25,7 +25,7 @@ public class ChatClientMain implements LoginListener {
         messageHandler = new MessageHandler();
         userHandleController = new UserHandleController();
         userHandleController.setListener(this);
-        localhost = new ChatClient("localhost", 8818);
+        localhost = new ChatClient(Config.CHAT_SERVER_URL, Config.PORT);
         localhost.addMessageListener(messageHandler);
         localhost.setLoginListener(this);
     }
@@ -35,12 +35,11 @@ public class ChatClientMain implements LoginListener {
     }
 
     @Override
-    public void onDatabaseLogin() {
+    public void onLoginButtonEvent(String userhandle, String password) {
         progressWindow.setVisible(true);
         progressWindow.addProgress("Connecting to Chat Server");
         try {
-            currentLogin = new ChatClientUser(userHandleController.getModel());
-            localhost.login(currentLogin);
+            localhost.login(userhandle, password);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -48,10 +47,10 @@ public class ChatClientMain implements LoginListener {
     }
 
     @Override
-    public void onChatServerLogin() {
+    public void onChatServerLogin(String userhandle) {
         localhost.setRsa(new RSA(progressWindow));
         progressWindow.dispose();
-        new ListOnlineController(currentLogin.getUserHandle()) {{
+        new ListOnlineController(userhandle) {{
             localhost.addMessageListener(this.getModel());
         }};
         userHandleController.getView().dispose();
