@@ -2,32 +2,40 @@ package chatClient.messageUI;
 
 import dependencies.UI.AddPlaceHolder;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class MessageView extends JPanel {
 
     private DefaultListModel<Messages> messageList;
     private JTextField messageField = new JTextField("Message");
     private JButton sendButton = new JButton("Send");
+    JButton videoCallButton = new JButton("Video");
 
     public MessageView() throws HeadlessException {
+
+
 //        setBackground(Color.cyan);
         JPanel mainPanel = this;
         setLayout(new BorderLayout());
         JPanel panel = new JPanel(new BorderLayout());
 //        panel.setBackground(Color.red);
+
         panel.add(getMessagePanel(), BorderLayout.CENTER);
         panel.add(getBottomPanel(), BorderLayout.SOUTH);
-
         mainPanel.add(panel, BorderLayout.CENTER);
 //        setVisible(true);
 //        setDefaultCloseOperation(HIDE_ON_CLOSE);
         addPlaceHolder();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         new JFrame() {{
 //            setLayout(new GridLayout(1, 1));
             add(new MessageView());
@@ -48,7 +56,11 @@ public class MessageView extends JPanel {
     private JPanel getBottomPanel() {
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(messageField, BorderLayout.CENTER);
-        bottomPanel.add(sendButton, BorderLayout.EAST);
+        JPanel jPanel = new JPanel(new BorderLayout());
+        jPanel.add(sendButton,BorderLayout.WEST);
+
+        jPanel.add(videoCallButton,BorderLayout.EAST);
+        bottomPanel.add(jPanel, BorderLayout.EAST);
         return bottomPanel;
     }
 
@@ -56,6 +68,7 @@ public class MessageView extends JPanel {
         this.messageList = new DefaultListModel<>();
         return new JScrollPane(new JList<Messages>(messageList) {{
             setCellRenderer(new MessageListRenderer());
+
         }});
     }
 
@@ -92,5 +105,10 @@ public class MessageView extends JPanel {
         setMessageText("");
         getMessageField().setEnabled(true);
         sendButton.setEnabled(true);
+    }
+    private static Icon resizeIcon(ImageIcon icon, int resizedWidth, int resizedHeight) {
+        Image img = icon.getImage();
+        Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight,  java.awt.Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImage);
     }
 }

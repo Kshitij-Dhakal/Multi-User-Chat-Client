@@ -9,7 +9,6 @@ public class MessageModel {
     }
 
     public void send() {
-        //TODO add send method
         view.send();
     }
 }

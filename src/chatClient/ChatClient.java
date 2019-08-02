@@ -30,19 +30,16 @@ public class ChatClient {
         this.serverName = serverName;
         this.serverPort = serverPort;
         if (connect()) {
-            (new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        listenServer();
-                    } catch (IOException e) {
-                        System.err.println("ChatClient : Server Disconnected!");
-                        e.printStackTrace();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
+            new Thread(() -> {
+                try {
+                    listenServer();
+                } catch (IOException e) {
+                    System.err.println("ChatClient : Server Disconnected!");
+                    e.printStackTrace();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }).start();
         } else {
@@ -157,7 +154,6 @@ public class ChatClient {
     private void handleOnlineCommand(String[] tokens) throws SQLException, ClassNotFoundException, IOException {
         if (tokens.length == 2) {
             String userHandle = tokens[1];
-            //TODO send key userhandle and (Key signed using RSA):(key signature)
             String keyCommand = "key " + userHandle + " init " + rsa.getPublic_variable().toString(16);
             send(keyCommand);
 //            System.out.println("Chat Client : " + keyCommand);

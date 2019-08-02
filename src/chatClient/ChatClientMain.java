@@ -21,7 +21,6 @@ public class ChatClientMain implements LoginListener {
     private MessageHandler messageHandler;
 
     public ChatClientMain() {
-        //TODO handle progress window from ChatClientMain to show dbconnection, chatserverconnection and key exchange progress
         messageHandler = new MessageHandler();
         userHandleController = new UserHandleController();
         userHandleController.setListener(this);
@@ -71,7 +70,9 @@ public class ChatClientMain implements LoginListener {
         public void actionPerformed(ActionEvent e) {
             try {
                 String message = messageText.getText().trim();
-                localhost.send("send " + to + " " + Des.encrypt(ChatClient.getKeys(to), message));
+                if (!message.equalsIgnoreCase("")) {
+                    localhost.send("send " + to + " " + Des.encrypt(ChatClient.getKeys(to), message));
+                }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
