@@ -2,14 +2,10 @@ package chatClient.messageUI;
 
 import dependencies.UI.AddPlaceHolder;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class MessageView extends JPanel {
 
@@ -57,9 +53,9 @@ public class MessageView extends JPanel {
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(messageField, BorderLayout.CENTER);
         JPanel jPanel = new JPanel(new BorderLayout());
-        jPanel.add(sendButton,BorderLayout.WEST);
+        jPanel.add(sendButton, BorderLayout.WEST);
 
-        jPanel.add(videoCallButton,BorderLayout.EAST);
+        jPanel.add(videoCallButton, BorderLayout.EAST);
         bottomPanel.add(jPanel, BorderLayout.EAST);
         return bottomPanel;
     }
@@ -106,9 +102,14 @@ public class MessageView extends JPanel {
         getMessageField().setEnabled(true);
         sendButton.setEnabled(true);
     }
+
     private static Icon resizeIcon(ImageIcon icon, int resizedWidth, int resizedHeight) {
         Image img = icon.getImage();
-        Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight,  java.awt.Image.SCALE_SMOOTH);
+        Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight, java.awt.Image.SCALE_SMOOTH);
         return new ImageIcon(resizedImage);
+    }
+
+    public void addVideoCallListener(ActionListener listener) {
+        videoCallButton.addActionListener(listener);
     }
 }

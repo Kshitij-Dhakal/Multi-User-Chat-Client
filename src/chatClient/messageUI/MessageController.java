@@ -36,4 +36,8 @@ public class MessageController {
     public void addActionListener(ActionListener listener) {
         this.view.addActionListener(listener);
     }
+
+    public void addVideoCallListener(ActionListener listener) {
+        this.view.addVideoCallListener(listener);
+    }
 }

@@ -1,5 +1,7 @@
 package chatClient;
 
+import chatClient.videoUI.VideoCallReceiver;
+import chatClient.videoUI.VideoCallServer;
 import chatServer.ServerWorker;
 import dependencies.Listeners.LoginListener;
 import dependencies.Listeners.MessageListener;
@@ -8,6 +10,7 @@ import des.RSA;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,6 +43,8 @@ public class ChatClient {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }).start();
         } else {
@@ -68,7 +73,7 @@ public class ChatClient {
         send("login " + userhandle + " " + password);
     }
 
-    private void listenServer() throws IOException, SQLException, ClassNotFoundException {
+    private void listenServer() throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         String line;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(serverIn));
         while ((line = bufferedReader.readLine()) != null) {
@@ -84,7 +89,39 @@ public class ChatClient {
                 handleLoginCommand(line);
             } else if (tokens[0].equalsIgnoreCase("key")) {
                 handleKeyCommand(tokens);
+            } else if (tokens[0].equalsIgnoreCase("video")) {
+                handleVideoCommand(tokens);
             }
+        }
+    }
+
+    private void handleVideoCommand(String[] tokens) throws IOException, InterruptedException {
+        //TODO handleVideo at client side
+        /**
+         * if command = video init receiver_url
+         *      start videoCallServer destined at receiver_url port 42070
+         * else if command = video start
+         *      start videoCallReceiver at port 420
+         */
+        if (tokens[1].equalsIgnoreCase("init")) {
+            InetAddress ip = InetAddress.getByName(tokens[2]);
+            new VideoCallServer(ip, 42070);
+        } else if (tokens[1].equalsIgnoreCase("start")) {
+            new VideoCallReceiver(42070, tokens[2]) {{
+                addAcceptListener(ChatClientMain.localhost);
+                addRejectListener(ChatClientMain.localhost);
+            }};
+        } else if (tokens[1].equalsIgnoreCase("accept")) {
+            InetAddress ip = InetAddress.getByName(tokens[2]);
+            new VideoCallServer(ip, 42071);
+        } else if (tokens[1].equalsIgnoreCase("accepted")) {
+            //TODO change ui for video call accepted
+            new VideoCallReceiver(42070, tokens[2]) {{
+                addAcceptListener(ChatClientMain.localhost);
+                addRejectListener(ChatClientMain.localhost);
+            }};
+        } else if (tokens[1].equalsIgnoreCase("end")) {
+            //TODO end sending video
         }
     }
 

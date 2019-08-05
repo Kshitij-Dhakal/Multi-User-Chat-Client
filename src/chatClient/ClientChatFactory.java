@@ -19,6 +19,8 @@ public class ClientChatFactory {
 
                 }});
                 addActionListener(new ChatClientMain.SendAction(key, getView().getMessageField(), getView()));
+                //edit to
+                addVideoCallListener(new ChatClientMain.VideoCallAction(key));
             }};
             chatContainerMap.put(key, value);
         }

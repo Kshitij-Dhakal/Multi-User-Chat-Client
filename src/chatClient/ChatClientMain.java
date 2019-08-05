@@ -16,7 +16,7 @@ import java.io.IOException;
 
 public class ChatClientMain implements LoginListener {
     ProgressWindow progressWindow = new ProgressWindow(6);
-    private static ChatClient localhost;
+    static ChatClient localhost;
     private UserHandleController userHandleController;
     private MessageHandler messageHandler;
 
@@ -53,6 +53,24 @@ public class ChatClientMain implements LoginListener {
             localhost.addMessageListener(this.getModel());
         }};
         userHandleController.getView().dispose();
+    }
+
+    static class VideoCallAction implements ActionListener {
+        String to;
+
+        VideoCallAction(String to) {
+            this.to = to;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                localhost.send("video start " + this.to);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        }
     }
 
     static class SendAction implements ActionListener {

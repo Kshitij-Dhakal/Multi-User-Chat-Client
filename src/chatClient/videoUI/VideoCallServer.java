@@ -1,7 +1,6 @@
 package chatClient.videoUI;
 
 import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.WebcamResolution;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -14,9 +13,10 @@ import java.net.InetAddress;
 
 public class VideoCallServer {
 
-    VideoCallServer(int port) throws IOException, InterruptedException {
+    public VideoCallServer(InetAddress ip, int port) throws IOException, InterruptedException {
+        System.out.println("Starting video server "+port);
         Webcam webcam = Webcam.getDefault();
-        webcam.setViewSize(new Dimension(320,240));
+        webcam.setViewSize(new Dimension(320, 240));
         webcam.open();
         DatagramSocket ds = new DatagramSocket();
 
@@ -27,16 +27,16 @@ public class VideoCallServer {
             ImageIO.write(img, "jpg", baos);
 
             byte[] buffer = baos.toByteArray();
-            InetAddress ip = InetAddress.getByName("localhost");
             DatagramPacket dp = new DatagramPacket(buffer, buffer.length, ip, port);
-            System.out.println("Sent " + dp.getLength());
+//            System.out.println("Sent " + dp.getLength());
             ds.send(dp);
             Thread.sleep(20);
         }
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        new VideoCallServer(3000);
+        InetAddress ip = InetAddress.getByName("localhost");
+        new VideoCallServer(ip, 42070);
     }
 
 }
