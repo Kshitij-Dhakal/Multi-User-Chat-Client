@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChatClient {
+    VideoCallServer vcServer;
     static Map<String, KeySheet> keys = new HashMap<>();
     RSA rsa;
     private KeyGenerator keyGenerator = new KeyGenerator();
@@ -105,7 +106,7 @@ public class ChatClient {
          */
         if (tokens[1].equalsIgnoreCase("init")) {
             InetAddress ip = InetAddress.getByName(tokens[2]);
-            new VideoCallServer(ip, 42070);
+            vcServer = new VideoCallServer(ip, 42070);
         } else if (tokens[1].equalsIgnoreCase("start")) {
             new VideoCallReceiver(42070, tokens[2]) {{
                 addAcceptListener(ChatClientMain.localhost);
@@ -113,7 +114,7 @@ public class ChatClient {
             }};
         } else if (tokens[1].equalsIgnoreCase("accept")) {
             InetAddress ip = InetAddress.getByName(tokens[2]);
-            new VideoCallServer(ip, 42071);
+            vcServer = new VideoCallServer(ip, 42071);
         } else if (tokens[1].equalsIgnoreCase("accepted")) {
             //TODO change ui for video call accepted
             new VideoCallReceiver(42070, tokens[2]) {{
@@ -121,7 +122,7 @@ public class ChatClient {
                 addRejectListener(ChatClientMain.localhost);
             }};
         } else if (tokens[1].equalsIgnoreCase("end")) {
-            //TODO end sending video
+            vcServer.stopSending();
         }
     }
 

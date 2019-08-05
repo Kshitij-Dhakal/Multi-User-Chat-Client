@@ -13,30 +13,48 @@ import java.net.InetAddress;
 
 public class VideoCallServer {
 
+    private VideoThread thread;
+
     public VideoCallServer(InetAddress ip, int port) throws IOException, InterruptedException {
-        System.out.println("Starting video server "+port);
+        System.out.println("Starting video server " + port);
         Webcam webcam = Webcam.getDefault();
         webcam.setViewSize(new Dimension(320, 240));
         webcam.open();
         DatagramSocket ds = new DatagramSocket();
 
-        while (true) {
-            BufferedImage img = webcam.getImage();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-            ImageIO.write(img, "jpg", baos);
-
-            byte[] buffer = baos.toByteArray();
-            DatagramPacket dp = new DatagramPacket(buffer, buffer.length, ip, port);
+        thread = new VideoThread() {
+            @Override
+            public void run() {
+                while (!canceled) {
+                    try {
+                        BufferedImage img = webcam.getImage();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        ImageIO.write(img, "jpg", baos);
+                        byte[] buffer = baos.toByteArray();
+                        DatagramPacket dp = new DatagramPacket(buffer, buffer.length, ip, port);
 //            System.out.println("Sent " + dp.getLength());
-            ds.send(dp);
-            Thread.sleep(20);
+                        ds.send(dp);
+                        Thread.sleep(20);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                webcam.close();
+            }
+        };
+        thread.start();
+    }
+
+    private static class VideoThread extends Thread {
+        public volatile boolean canceled = false;
+
+        public void cancelThread() {
+            this.canceled = true;
         }
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        InetAddress ip = InetAddress.getByName("localhost");
-        new VideoCallServer(ip, 42070);
+    public void stopSending() {
+        this.thread.cancelThread();
     }
 
 }
