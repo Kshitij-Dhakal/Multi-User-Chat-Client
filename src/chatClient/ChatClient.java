@@ -5,6 +5,7 @@ import chatClient.videoUI.VideoCallServer;
 import chatServer.ServerWorker;
 import dependencies.Listeners.LoginListener;
 import dependencies.Listeners.MessageListener;
+import dependencies.lib.UserBean;
 import des.KeyGenerator;
 import des.RSA;
 
@@ -81,6 +82,7 @@ public class ChatClient {
 //            System.out.println("Chat CLient : " + line);
             String[] tokens = line.split(" ");
             if (tokens[0].equalsIgnoreCase("online")) {
+                System.out.println(line);
                 handleOnlineCommand(tokens);
             } else if (tokens[0].equalsIgnoreCase("offline")) {
                 handleOfflineCommand(tokens);
@@ -164,7 +166,9 @@ public class ChatClient {
         System.out.println(line);
         String[] split = line.split(":");
         if (split[0].equalsIgnoreCase(ServerWorker.LOGIN_SUCCESS)) {
-            listener.onChatServerLogin(split[1]);
+            listener.onChatServerLogin(new UserBean(){{
+                setUserHandle(split[1]);
+            }});
         }
     }
 
@@ -189,14 +193,21 @@ public class ChatClient {
         }
     }
 
-    private void handleOnlineCommand(String[] tokens) throws SQLException, ClassNotFoundException, IOException {
+    private void handleOnlineCommand(String[] tokens) throws IOException {
+        //FIXME handle online command
         if (tokens.length == 2) {
-            String userHandle = tokens[1];
-            String keyCommand = "key " + userHandle + " init " + rsa.getPublic_variable().toString(16);
+            String[] split = tokens[1].split("~");
+
+            String keyCommand = "key " + split[0] + " init " + rsa.getPublic_variable().toString(16);
             send(keyCommand);
 //            System.out.println("Chat Client : " + keyCommand);
             for (MessageListener messageListener : messageListeners) {
-                messageListener.online(ChatClientUser.getUserFromDatabase(userHandle));
+                //FIXME use UserBean
+                messageListener.online(new UserBean() {{
+                    setUserHandle(split[0]);
+                    setFirstName(split[1]);
+                    setLastName(split[2]);
+                }});
             }
         }
     }
@@ -206,7 +217,10 @@ public class ChatClient {
             String userHandle = tokens[1];
             keys.remove(userHandle);
             for (MessageListener messageListener : messageListeners) {
-                messageListener.offline(ChatClientUser.getUserFromDatabase(userHandle));
+                //FIXME use UserBean
+                messageListener.offline(new UserBean() {{
+                    setUserHandle(userHandle);
+                }});
             }
         }
     }

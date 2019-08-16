@@ -1,6 +1,6 @@
 package chatClient.ListOnlineUI;
 
-import chatClient.ChatClientUser;
+import dependencies.lib.UserBean;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -8,19 +8,19 @@ import java.awt.event.MouseEvent;
 public class ListOnlineController {
     ListOnlineModel model;
     ListOnlineView view;
-    private String userHandle;
+    private UserBean user;
 
-    public ListOnlineController(String userHandle) {
-        this.userHandle = userHandle;
+    public ListOnlineController(UserBean user) {
+        this.user = user;
         view = new ListOnlineView();
-        model = new ListOnlineModel(view, this.userHandle);
+        model = new ListOnlineModel(view, this.user.getUserHandle());
         view.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
                     int index = view.getList().getSelectedIndex();
-                    ChatClientUser selectedValue = view.getList().getSelectedValue();
-                    selectedValue.resetMessageCount();
+                    UserBean selectedValue = view.getList().getSelectedValue();
+                    selectedValue.resetMessage();
                     view.getListModel().setElementAt(selectedValue, index);
                     view.setMessageBox(selectedValue.getUserHandle());
                 } catch (Exception e1) {

@@ -1,17 +1,16 @@
 package chatClient.ListOnlineUI;
 
-import chatClient.ChatClientUser;
 import chatClient.ClientChatFactory;
 import chatClient.messageUI.MessageController;
-import dependencies.lib.User;
+import dependencies.lib.UserBean;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseListener;
 
 public class ListOnlineView extends JFrame {
-    private JList<ChatClientUser> list;
-    private DefaultListModel<ChatClientUser> listModel = new DefaultListModel<>();
+    private JList<UserBean> list;
+    private DefaultListModel<UserBean> listModel = new DefaultListModel<>();
     private JPanel messageBox = new JPanel(new CardLayout());
 
     public ListOnlineView() {
@@ -38,33 +37,6 @@ public class ListOnlineView extends JFrame {
     }
 
     public static void main(String[] args) {
-        new ListOnlineView() {{
-            ChatClientUser kshitij = new ChatClientUser(new User()) {{
-                setUserHandle("@Kshitij_Dhakal");
-                setFirstName("Kshitij");
-                setLastName("Dhakal");
-            }};
-            ChatClientUser subin = new ChatClientUser(new User()) {{
-                setUserHandle("@Subin_Shrestha");
-                setFirstName("Subin");
-                setLastName("Shrestha");
-                addNewMessage();
-                addNewMessage();
-            }};
-            ChatClientUser sudesh = new ChatClientUser(new User()) {{
-                setUserHandle("@Sudesh_Khatiwada");
-                setFirstName("Sudesh");
-                setLastName("Khatiwada");
-                addNewMessage();
-            }};
-            getListModel().addElement(kshitij);
-            getListModel().addElement(subin);
-            getListModel().addElement(sudesh);
-//            System.out.println(kshitij);
-//            System.out.println(subin);
-//            System.out.println(sudesh);
-        }};
-
 
     }
 
@@ -96,11 +68,11 @@ public class ListOnlineView extends JFrame {
         return new JScrollPane(list);
     }
 
-    public DefaultListModel<ChatClientUser> getListModel() {
+    public DefaultListModel<UserBean> getListModel() {
         return listModel;
     }
 
-    public JList<ChatClientUser> getList() {
+    public JList<UserBean> getList() {
         return list;
     }
 

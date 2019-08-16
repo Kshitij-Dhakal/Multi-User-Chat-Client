@@ -54,6 +54,7 @@ public class VideoCallReceiver extends JFrame {
                     DatagramPacket dp = new DatagramPacket(new byte[64000], 64000);
                     try {
                         ds.receive(dp);
+                        System.out.println("received : "+dp.getLength());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

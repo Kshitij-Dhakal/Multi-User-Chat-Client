@@ -1,12 +1,12 @@
 package chatClient.ListOnlineUI;
 
-import chatClient.ChatClientUser;
+import dependencies.lib.UserBean;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class ListOnlineRenderer extends JPanel implements ListCellRenderer<ChatClientUser> {
+public class ListOnlineRenderer extends JPanel implements ListCellRenderer<UserBean> {
     JLabel userName = new JLabel();
     JLabel userHandle = new JLabel();
     JLabel messageBadge = new JLabel();
@@ -29,12 +29,12 @@ public class ListOnlineRenderer extends JPanel implements ListCellRenderer<ChatC
     }
 
     @Override
-    public Component getListCellRendererComponent(JList<? extends ChatClientUser> list, ChatClientUser value, int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList<? extends UserBean> list, UserBean value, int index, boolean isSelected, boolean cellHasFocus) {
         userName.setText(value.getName());
         userHandle.setText("(" + value.getUserHandle() + ")");
-        if (value.getMessageCount() > 0) {
+        if (value.getMessage() > 0) {
             messageBadge.setVisible(true);
-            messageBadge.setText(value.getMessageCount() + "");
+            messageBadge.setText(value.getMessage() + "");
         } else {
             messageBadge.setVisible(false);
         }

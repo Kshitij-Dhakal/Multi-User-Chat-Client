@@ -5,6 +5,7 @@ import chatClient.messageUI.MessageView;
 import dependencies.Listeners.LoginListener;
 import dependencies.UI.ProgressWindow;
 import dependencies.lib.Config;
+import dependencies.lib.UserBean;
 import des.Des;
 import des.RSA;
 import userHandleDesktop.UI.UserHandleController;
@@ -34,11 +35,11 @@ public class ChatClientMain implements LoginListener {
     }
 
     @Override
-    public void onLoginButtonEvent(String userhandle, String password) {
+    public void onLoginButtonEvent(UserBean bean) {
         progressWindow.setVisible(true);
         progressWindow.addProgress("Connecting to Chat Server");
         try {
-            localhost.login(userhandle, password);
+            localhost.login(bean.getUserHandle(), bean.getPassword());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,10 +47,10 @@ public class ChatClientMain implements LoginListener {
     }
 
     @Override
-    public void onChatServerLogin(String userhandle) {
+    public void onChatServerLogin(UserBean bean) {
         localhost.setRsa(new RSA(progressWindow));
         progressWindow.dispose();
-        new ListOnlineController(userhandle) {{
+        new ListOnlineController(bean) {{
             localhost.addMessageListener(this.getModel());
         }};
         userHandleController.getView().dispose();

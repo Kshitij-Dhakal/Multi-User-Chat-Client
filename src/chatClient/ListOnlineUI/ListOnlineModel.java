@@ -1,10 +1,9 @@
 package chatClient.ListOnlineUI;
 
-import chatClient.ChatClientUser;
 import chatClient.ClientChatFactory;
 import chatClient.messageUI.MessageController;
 import dependencies.Listeners.MessageListener;
-import dependencies.lib.User;
+import dependencies.lib.UserBean;
 
 import java.util.Iterator;
 
@@ -38,15 +37,16 @@ public class ListOnlineModel implements MessageListener {
     }
 
     @Override
-    public void online(User login) {
-        view.getListModel().addElement(new ChatClientUser(login));
+    public void online(UserBean login) {
+        view.getListModel().addElement(login);
     }
 
     @Override
-    public void offline(User login) {
-        Iterator<ChatClientUser> iterator = view.getListModel().elements().asIterator();
+    public void offline(UserBean login) {
+        //FIXME implementation of handle offline
+        Iterator<UserBean> iterator = view.getListModel().elements().asIterator();
         while (iterator.hasNext()) {
-            ChatClientUser user = iterator.next();
+            UserBean user = iterator.next();
             if (user.getUserHandle().equals(login.getUserHandle())) {
                 view.getListModel().removeElement(user);
             }
@@ -63,11 +63,11 @@ public class ListOnlineModel implements MessageListener {
     @Override
     public void onMessage(String fromLogin, String messageText) {
         int index = 0;
-        Iterator<ChatClientUser> iterator = view.getListModel().elements().asIterator();
+        Iterator<UserBean> iterator = view.getListModel().elements().asIterator();
         while (iterator.hasNext()) {
-            ChatClientUser user = iterator.next();
+            UserBean user = iterator.next();
             if (user.getUserHandle().equals(fromLogin)) {
-                user.addNewMessage();
+                user.addMessage();
                 view.getListModel().setElementAt(user, index);
             }
             index++;
