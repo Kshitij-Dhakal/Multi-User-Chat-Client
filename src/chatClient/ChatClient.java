@@ -71,15 +71,15 @@ public class ChatClient {
         this.rsa = rsa;
     }
 
-    public void login(String userhandle, String password) throws IOException {
-        send("login " + userhandle + " " + password);
+    public void login(UserBean bean) throws IOException {
+        send("login " + bean.getUserHandle() + " " + bean.getPassword());
     }
 
     private void listenServer() throws IOException, SQLException, ClassNotFoundException, InterruptedException {
         String line;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(serverIn));
         while ((line = bufferedReader.readLine()) != null) {
-//            System.out.println("Chat CLient : " + line);
+            System.out.println("Chat CLient : " + line);
             String[] tokens = line.split(" ");
             if (tokens[0].equalsIgnoreCase("online")) {
                 System.out.println(line);
@@ -166,7 +166,7 @@ public class ChatClient {
         System.out.println(line);
         String[] split = line.split(":");
         if (split[0].equalsIgnoreCase(ServerWorker.LOGIN_SUCCESS)) {
-            listener.onChatServerLogin(new UserBean(){{
+            listener.onChatServerLogin(new UserBean() {{
                 setUserHandle(split[1]);
             }});
         }
@@ -244,5 +244,10 @@ public class ChatClient {
 
     public void addMessageListener(MessageListener listener) {
         messageListeners.add(listener);
+    }
+
+    public void register(UserBean bean) throws IOException {
+        //TODO add register event
+        send("register " + bean.getFirstName() + "~" + bean.getLastName() + "~" + bean.getUserHandle() + "~" + bean.getPassword());
     }
 }

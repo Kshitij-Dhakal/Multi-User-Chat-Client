@@ -39,7 +39,7 @@ public class ChatClientMain implements LoginListener {
         progressWindow.setVisible(true);
         progressWindow.addProgress("Connecting to Chat Server");
         try {
-            localhost.login(bean.getUserHandle(), bean.getPassword());
+            localhost.login(bean);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -96,5 +96,17 @@ public class ChatClientMain implements LoginListener {
                 ex.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onRegisterButtonEvent(UserBean bean) {
+        progressWindow.setVisible(true);
+        progressWindow.addProgress("Connecting to Chat Server");
+        try {
+            localhost.register(bean);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //if login is successful ListOnline is created and userHandle is disposed
     }
 }
