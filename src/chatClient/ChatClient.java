@@ -22,6 +22,7 @@ import java.util.Map;
 public class ChatClient {
     static Map<String, KeySheet> keys = new HashMap<>();
     VideoCallServer vcServer;
+    VideoCallReceiver vcReceiver;
     RSA rsa;
     private KeyGenerator keyGenerator = new KeyGenerator();
     private ArrayList<MessageListener> messageListeners = new ArrayList<>();
@@ -121,7 +122,7 @@ public class ChatClient {
             vcServer = new VideoCallServer(ip, Config.VIDEO_RECEIVER_PORT);
         } else if (tokens[1].equalsIgnoreCase("accepted")) {
             //TODO change ui for video call accepted
-            new VideoCallReceiver(Config.VIDEO_CALLER_PORT, tokens[2]) {{
+            new VideoCallReceiver(Config.VIDEO_RECEIVER_PORT, tokens[2]) {{
                 addAcceptListener(ChatClientMain.localhost);
                 addRejectListener(ChatClientMain.localhost);
             }};
