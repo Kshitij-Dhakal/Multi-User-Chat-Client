@@ -3,7 +3,6 @@ package chatClient.messageUI;
 import userHandleDesktop.UI.UserHandleModel;
 
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 public class MessageController {
 

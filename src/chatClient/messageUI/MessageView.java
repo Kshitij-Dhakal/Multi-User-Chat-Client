@@ -9,10 +9,10 @@ import java.io.IOException;
 
 public class MessageView extends JPanel {
 
+    JButton videoCallButton = new JButton("Video");
     private DefaultListModel<Messages> messageList;
     private JTextField messageField = new JTextField("Message");
     private JButton sendButton = new JButton("Send");
-    JButton videoCallButton = new JButton("Video");
 
     public MessageView() throws HeadlessException {
 
@@ -39,6 +39,12 @@ public class MessageView extends JPanel {
             setSize(640, 480);
             setDefaultCloseOperation(EXIT_ON_CLOSE);
         }};
+    }
+
+    private static Icon resizeIcon(ImageIcon icon, int resizedWidth, int resizedHeight) {
+        Image img = icon.getImage();
+        Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight, java.awt.Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImage);
     }
 
     private void addPlaceHolder() {
@@ -101,12 +107,6 @@ public class MessageView extends JPanel {
         setMessageText("");
         getMessageField().setEnabled(true);
         sendButton.setEnabled(true);
-    }
-
-    private static Icon resizeIcon(ImageIcon icon, int resizedWidth, int resizedHeight) {
-        Image img = icon.getImage();
-        Image resizedImage = img.getScaledInstance(resizedWidth, resizedHeight, java.awt.Image.SCALE_SMOOTH);
-        return new ImageIcon(resizedImage);
     }
 
     public void addVideoCallListener(ActionListener listener) {

@@ -13,7 +13,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 public class VideoCallReceiver extends JFrame {
-    private VideoThread thread;
     String to;
     int posX = 0, posY = 0;
     JButton acceptCall = new JButton("Accept call") {{
@@ -22,6 +21,7 @@ public class VideoCallReceiver extends JFrame {
     JButton endCall = new JButton() {{
         setBackground(new Color(245, 99, 66));
     }}; //either reject call or end call
+    private VideoThread thread;
 
     /**
      * @param port
@@ -54,7 +54,7 @@ public class VideoCallReceiver extends JFrame {
                     DatagramPacket dp = new DatagramPacket(new byte[64000], 64000);
                     try {
                         ds.receive(dp);
-                        System.out.println("received : "+dp.getLength());
+                        System.out.println("received : " + dp.getLength());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

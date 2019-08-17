@@ -5,6 +5,7 @@ import chatClient.videoUI.VideoCallServer;
 import chatServer.ServerWorker;
 import dependencies.Listeners.LoginListener;
 import dependencies.Listeners.MessageListener;
+import dependencies.lib.Config;
 import dependencies.lib.UserBean;
 import des.KeyGenerator;
 import des.RSA;
@@ -19,8 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChatClient {
-    VideoCallServer vcServer;
     static Map<String, KeySheet> keys = new HashMap<>();
+    VideoCallServer vcServer;
     RSA rsa;
     private KeyGenerator keyGenerator = new KeyGenerator();
     private ArrayList<MessageListener> messageListeners = new ArrayList<>();
@@ -79,7 +80,7 @@ public class ChatClient {
         String line;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(serverIn));
         while ((line = bufferedReader.readLine()) != null) {
-            System.out.println("Chat CLient : " + line);
+//            System.out.println("Chat CLient : " + line);
             String[] tokens = line.split(" ");
             if (tokens[0].equalsIgnoreCase("online")) {
                 System.out.println(line);
@@ -108,18 +109,19 @@ public class ChatClient {
          */
         if (tokens[1].equalsIgnoreCase("init")) {
             InetAddress ip = InetAddress.getByName(tokens[2]);
-            vcServer = new VideoCallServer(ip, 42070);
+            vcServer = new VideoCallServer(ip, Config.VIDEO_CALLER_PORT);
         } else if (tokens[1].equalsIgnoreCase("start")) {
-            new VideoCallReceiver(42070, tokens[2]) {{
+            new VideoCallReceiver(Config.VIDEO_CALLER_PORT, tokens[2]) {{
                 addAcceptListener(ChatClientMain.localhost);
                 addRejectListener(ChatClientMain.localhost);
             }};
         } else if (tokens[1].equalsIgnoreCase("accept")) {
             InetAddress ip = InetAddress.getByName(tokens[2]);
-            vcServer = new VideoCallServer(ip, 42071);
+            System.out.println(ip.getHostAddress());
+            vcServer = new VideoCallServer(ip, Config.VIDEO_RECEIVER_PORT);
         } else if (tokens[1].equalsIgnoreCase("accepted")) {
             //TODO change ui for video call accepted
-            new VideoCallReceiver(42070, tokens[2]) {{
+            new VideoCallReceiver(Config.VIDEO_CALLER_PORT, tokens[2]) {{
                 addAcceptListener(ChatClientMain.localhost);
                 addRejectListener(ChatClientMain.localhost);
             }};
