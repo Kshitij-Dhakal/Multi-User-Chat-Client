@@ -87,7 +87,8 @@ public class ChatClient {
                 System.out.println(line);
                 handleOnlineCommand(tokens);
             } else if (tokens[0].equalsIgnoreCase("offline")) {
-                handleOfflineCommand(tokens);
+                System.out.println(line);
+                handleOfflineCommand(tokens[1]);
             } else if (tokens[0].equalsIgnoreCase("message")) {
                 handleMessageCommand(line);
             } else if (tokens[0].equalsIgnoreCase("login")) {
@@ -112,7 +113,7 @@ public class ChatClient {
             InetAddress ip = InetAddress.getByName(tokens[2]);
             vcServer = new VideoCallServer(ip, Config.VIDEO_CALLER_PORT);
         } else if (tokens[1].equalsIgnoreCase("start")) {
-            new VideoCallReceiver(Config.VIDEO_CALLER_PORT, tokens[2]) {{
+            vcReceiver = new VideoCallReceiver(Config.VIDEO_CALLER_PORT, tokens[2]) {{
                 addAcceptListener(ChatClientMain.localhost);
                 addRejectListener(ChatClientMain.localhost);
             }};
@@ -120,14 +121,17 @@ public class ChatClient {
             InetAddress ip = InetAddress.getByName(tokens[2]);
             System.out.println(ip.getHostAddress());
             vcServer = new VideoCallServer(ip, Config.VIDEO_RECEIVER_PORT);
+            vcReceiver.setServer(vcServer);
         } else if (tokens[1].equalsIgnoreCase("accepted")) {
             //TODO change ui for video call accepted
-            new VideoCallReceiver(Config.VIDEO_RECEIVER_PORT, tokens[2]) {{
+            vcReceiver = new VideoCallReceiver(Config.VIDEO_RECEIVER_PORT, tokens[2]) {{
                 addAcceptListener(ChatClientMain.localhost);
                 addRejectListener(ChatClientMain.localhost);
+                setServer(vcServer);
             }};
         } else if (tokens[1].equalsIgnoreCase("end")) {
             vcServer.stopSending();
+            vcReceiver.stopReceiving();
         }
     }
 
@@ -215,16 +219,19 @@ public class ChatClient {
         }
     }
 
-    private void handleOfflineCommand(String[] tokens) throws SQLException, ClassNotFoundException {
-        if (tokens.length == 2) {
-            String userHandle = tokens[1];
-            keys.remove(userHandle);
+    private void handleOfflineCommand(String line) throws SQLException, ClassNotFoundException {
+        String[] split = line.split("~");
+        if (split.length == 3) {
+            keys.remove(split[0]);
             for (MessageListener messageListener : messageListeners) {
                 //FIXME use UserBean
                 messageListener.offline(new UserBean() {{
-                    setUserHandle(userHandle);
+                    setUserHandle(split[0]);
+                    setFirstName(split[1]);
+                    setLastName(split[2]);
                 }});
             }
+
         }
     }
 

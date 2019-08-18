@@ -1,5 +1,6 @@
 package chatClient;
 
+import chatClient.ListOnlineUI.ListOnlineController;
 import chatClient.messageUI.MessageController;
 import dependencies.Listeners.MessageListener;
 import dependencies.lib.UserBean;
@@ -7,6 +8,7 @@ import des.Des;
 
 public class MessageHandler implements MessageListener {
     MessageController controller;
+    ListOnlineController listOnlineController;
 
     @Override
     public void onMessage(String fromLogin, String messageText) {

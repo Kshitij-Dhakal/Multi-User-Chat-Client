@@ -16,26 +16,6 @@ public class ListOnlineModel implements MessageListener {
         this.userHandle = userHandle;
     }
 
-    /**
-     * When Alice receives reply Kb from Bob she saves her key as K=Kb^Xa mod P
-     *
-     * @param userHandle
-     * @param Ka
-     */
-    public void onKeyReceive(String userHandle, String Ka) {
-
-    }
-
-    /**
-     * When Bob recieves Ka from Alice he saves his key as K=Ka^Xb mod P and sends Alice Kb=g^Xb mod P
-     *
-     * @param userHandle
-     * @param Ka
-     */
-    public void onKeyReply(String userHandle, String Ka) {
-
-    }
-
     @Override
     public void online(UserBean login) {
         view.getListModel().addElement(login);
@@ -44,6 +24,7 @@ public class ListOnlineModel implements MessageListener {
     @Override
     public void offline(UserBean login) {
         //FIXME implementation of handle offline
+        System.out.println("ListOnlineModel : Trying to remove " + login);
         Iterator<UserBean> iterator = view.getListModel().elements().asIterator();
         while (iterator.hasNext()) {
             UserBean user = iterator.next();

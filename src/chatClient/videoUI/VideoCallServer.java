@@ -18,6 +18,9 @@ public class VideoCallServer {
     public VideoCallServer(InetAddress ip, int port) throws IOException, InterruptedException {
         System.out.println("Starting video server " + port);
         Webcam webcam = Webcam.getDefault();
+        if (webcam.isOpen()) {
+            webcam.close();
+        }
         webcam.setViewSize(webcam.getViewSizes()[0]);
         webcam.open();
         DatagramSocket ds = new DatagramSocket();
@@ -40,6 +43,7 @@ public class VideoCallServer {
                     }
                 }
                 webcam.close();
+                System.out.println("Terminating Video Server at : " + port);
             }
         };
         thread.start();

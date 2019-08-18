@@ -1,6 +1,7 @@
 package chatClient.videoUI;
 
 import chatClient.ChatClient;
+import dependencies.lib.Config;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -13,6 +14,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 public class VideoCallReceiver extends JFrame {
+    VideoCallServer server;
     String to;
     int posX = 0, posY = 0;
     JButton acceptCall = new JButton("Accept call") {{
@@ -22,6 +24,14 @@ public class VideoCallReceiver extends JFrame {
         setBackground(new Color(245, 99, 66));
     }}; //either reject call or end call
     private VideoThread thread;
+
+    public void stopReceiving() {
+        this.thread.cancelThread();
+    }
+
+    public void setServer(VideoCallServer server) {
+        this.server = server;
+    }
 
     /**
      * @param port
@@ -88,8 +98,9 @@ public class VideoCallReceiver extends JFrame {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
                 }
+                System.out.println("Terminating Video Receiver at : " + port);
+                dispose();
             }
         };
         thread.start();
@@ -99,6 +110,11 @@ public class VideoCallReceiver extends JFrame {
                 add(endCall);
                 add(acceptCall);
             }}, BorderLayout.SOUTH);
+        } else if (port == Config.VIDEO_RECEIVER_PORT) {
+            endCall.setText("End Call");
+            add(new JPanel(new GridLayout(1, 1)) {{
+                add(endCall);
+            }}, BorderLayout.SOUTH);
         }
     }
 
@@ -107,7 +123,7 @@ public class VideoCallReceiver extends JFrame {
     }
 
     public void addRejectListener(ChatClient localhost) {
-        endCall.addActionListener(new RejectListener(to, localhost, this));
+        endCall.addActionListener(new RejectListener(to, localhost, this, server));
     }
 
     private static class AcceptListener implements ActionListener {
@@ -131,14 +147,16 @@ public class VideoCallReceiver extends JFrame {
     }
 
     private static class RejectListener implements ActionListener {
+        private VideoCallServer server;
         String to;
         ChatClient localhost;
         VideoCallReceiver receiver;
 
-        RejectListener(String to, ChatClient localhost, VideoCallReceiver receiver) {
+        RejectListener(String to, ChatClient localhost, VideoCallReceiver receiver, VideoCallServer server) {
             this.to = to;
             this.localhost = localhost;
             this.receiver = receiver;
+            this.server = server;
         }
 
         @Override
@@ -147,7 +165,14 @@ public class VideoCallReceiver extends JFrame {
                 localhost.send("video end " + this.to);
                 this.receiver.thread.cancelThread();
                 this.receiver.dispose();
+                //wait for receiver to close receiver
+                Thread.sleep(1000);
+                if (server != null) {
+                    server.stopSending();
+                }
             } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
         }
