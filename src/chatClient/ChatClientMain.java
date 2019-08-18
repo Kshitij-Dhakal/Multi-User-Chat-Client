@@ -70,7 +70,6 @@ public class ChatClientMain implements LoginListener {
 
     static class VideoCallAction implements ActionListener {
         String to;
-        //TODO implement toggle to end call when pressed again
 
         VideoCallAction(String to) {
             this.to = to;

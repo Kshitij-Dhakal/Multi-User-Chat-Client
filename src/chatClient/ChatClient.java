@@ -102,7 +102,6 @@ public class ChatClient {
     }
 
     private void handleVideoCommand(String[] tokens) throws IOException, InterruptedException {
-        //TODO handleVideo at client side
         /**
          * if command = video init receiver_url
          *      start videoCallServer destined at receiver_url port 42070
@@ -123,7 +122,6 @@ public class ChatClient {
             vcServer = new VideoCallServer(ip, Config.VIDEO_RECEIVER_PORT);
             vcReceiver.setServer(vcServer);
         } else if (tokens[1].equalsIgnoreCase("accepted")) {
-            //TODO change ui for video call accepted
             vcReceiver = new VideoCallReceiver(Config.VIDEO_RECEIVER_PORT, tokens[2]) {{
                 addAcceptListener(ChatClientMain.localhost);
                 addRejectListener(ChatClientMain.localhost);
@@ -201,7 +199,6 @@ public class ChatClient {
     }
 
     private void handleOnlineCommand(String[] tokens) throws IOException {
-        //FIXME handle online command
         if (tokens.length == 2) {
             String[] split = tokens[1].split("~");
 
@@ -209,7 +206,6 @@ public class ChatClient {
             send(keyCommand);
 //            System.out.println("Chat Client : " + keyCommand);
             for (MessageListener messageListener : messageListeners) {
-                //FIXME use UserBean
                 messageListener.online(new UserBean() {{
                     setUserHandle(split[0]);
                     setFirstName(split[1]);
@@ -224,7 +220,6 @@ public class ChatClient {
         if (split.length == 3) {
             keys.remove(split[0]);
             for (MessageListener messageListener : messageListeners) {
-                //FIXME use UserBean
                 messageListener.offline(new UserBean() {{
                     setUserHandle(split[0]);
                     setFirstName(split[1]);
@@ -257,7 +252,6 @@ public class ChatClient {
     }
 
     public void register(UserBean bean) throws IOException {
-        //TODO add register event
         send("register " + bean.getFirstName() + "~" + bean.getLastName() + "~" + bean.getUserHandle() + "~" + bean.getPassword());
     }
 }

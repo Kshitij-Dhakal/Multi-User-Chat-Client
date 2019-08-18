@@ -23,7 +23,6 @@ public class ListOnlineModel implements MessageListener {
 
     @Override
     public void offline(UserBean login) {
-        //FIXME implementation of handle offline
         System.out.println("ListOnlineModel : Trying to remove " + login);
         Iterator<UserBean> iterator = view.getListModel().elements().asIterator();
         while (iterator.hasNext()) {
